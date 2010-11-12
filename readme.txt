@@ -11,14 +11,10 @@ Adds a debug menu to the admin bar that shows query, cache, and other helpful de
 
 Adds a debug menu to the admin bar that shows query, cache, and other helpful debugging information.
 
-A must for developers!
-
-When WP_DEBUG is enabled it also tracks PHP Warnings and Notices to make them easier to find.
-
 == Upgrade Notice ==
 
 = 0.2 =
-Added PHP Notice / Warning tracking when WP_DEBUG enabled
+Added PHP Notice / Warning tracking
 Added deprecated function usage tracking
 
 = 0.1 =
@@ -27,7 +23,7 @@ Initial Release
 == Changelog ==
 
 = 0.2 =
-Added PHP Notice / Warning tracking when WP_DEBUG enabled
+Added PHP Notice / Warning tracking
 Added deprecated function usage tracking
 
 = 0.1 =
