@@ -17,7 +17,7 @@ function debug_bar_ajax_admin_init() {
 		( is_callable( 'getallheaders' ) && ( $headers = getallheaders() ) && isset( $headers['X-Request-Debug'] ) && 'true' == $headers['X-Request-Debug'] )
 	) {
 		ob_start();
-		add_action( 'shutdown', 'debug_bar_ajax_shutdown', -1 );
+		add_action( 'shutdown', 'debug_bar_ajax_shutdown', 0 );
 	}
 }
 
