@@ -11,16 +11,13 @@ function debug_bar_ajax_admin_init() {
 	if ( !is_super_admin() || !_get_admin_bar_pref( 'admin' ) ) // HACK :( is_admin_bar_showing() bails if DOING_AJAX
 		return;
 
-	if ( ! isset( $_SERVER['HTTP_X_REQUEST_DEBUG'] ) || 'true' != $_SERVER['HTTP_X_REQUEST_DEBUG'] )
-		return;
-
-	if ( ! is_callable( 'getallheaders' ) )
-		return;
-
-	$headers = getallheaders();
-	if ( isset( $headers['X-Request-Debug'] ) && 'true' == $headers['X-Request-Debug'] ) {
+	if ( // Big condition == Wrath of rboren
+		( isset( $_SERVER['HTTP_X_REQUEST_DEBUG'] ) && 'true' == $_SERVER['HTTP_X_REQUEST_DEBUG'] )
+	||
+		( is_callable( 'getallheaders' ) && ( $headers = getallheaders() ) && isset( $headers['X-Request-Debug'] ) && 'true' == $headers['X-Request-Debug'] )
+	) {
 		ob_start();
-		add_action( 'shutdown', 'debug_bar_ajax_shutdown', 0 );
+		add_action( 'shutdown', 'debug_bar_ajax_shutdown', -1 );
 	}
 }
 
