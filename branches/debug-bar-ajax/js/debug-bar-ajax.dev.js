@@ -7,7 +7,7 @@ jQuery( function($) {
 		var html = xhr.getResponseHeader( 'X-Response-Debug' ).split( ', ' ),
 		    span = $( '<span />' ),
 		    head = '<h1>' + span.text( ajaxOptions.type ).html() + ' ' + span.text( ajaxOptions.url ).html() + '</h1><dl>',
-		    data = ajaxOptions.data.replace( /\+/, ' ' ).split( '&' ),
+		    data = ajaxOptions.data.replace( /\+/g, ' ' ).split( '&' ),
 		    i, datum;
 
 		html = $.map( html, function( string ) {
