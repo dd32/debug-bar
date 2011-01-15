@@ -48,9 +48,11 @@ function debug_bar_ajax_response() {
 
 	$response = trim( $response );
 	$response = preg_replace( '/\s+/', ' ', $response ); // minimize whitespace
-	$response = rawurlencode( $response );
 
-	header( "X-Response-Debug: $response" );
+	foreach ( str_split( $response, 8000 ) as $chunk ) { // Will this cause multibyte problems?  We're just going to join them back together in JS
+		$chunk = rawurlencode( $chunk );
+		header( "X-Response-Debug: $chunk", false );
+	}
 }
 
 function debug_bar_ajax_scripts() {
