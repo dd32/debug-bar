@@ -32,11 +32,11 @@ class Debug_Bar_PHP extends Debug_Bar_Panel {
 		switch ( $type ) {
 			case E_WARNING :
 			case E_USER_WARNING :
-				$this->warnings[$_key] = array( $file.':'.$line, $message, wp_debug_backtrace_summary( __CLASS__ ) );
+				$this->warnings[$_key] = array( $file.':'.$line, $message );
 				break;
 			case E_NOTICE :
 			case E_USER_NOTICE :
-				$this->notices[$_key] = array( $file.':'.$line, $message, wp_debug_backtrace_summary( __CLASS__ ) );
+				$this->notices[$_key] = array( $file.':'.$line, $message );
 				break;
 			case E_STRICT :
 				// TODO
@@ -62,25 +62,17 @@ class Debug_Bar_PHP extends Debug_Bar_Panel {
 		echo '<h2><span>Total Notices:</span>' . number_format( count( $this->notices ) ) . "</h2>\n";
 		if ( count( $this->warnings ) ) {
 			echo '<ol class="debug-bar-php-list">';
-			foreach ( $this->warnings as $location_message_stack ) {
-				list( $location, $message, $stack) = $location_message_stack;
-				echo '<li class="debug-bar-php-warning">WARNING: ';
-				echo str_replace(ABSPATH, '', $location) . ' - ' . strip_tags($message);
-				echo '<br/>';
-				echo $stack;
-				echo '</li>';
+			foreach ( $this->warnings as $location_message) {
+				list( $location, $message) = $location_message;
+				echo "<li class='debug-bar-php-warning'>WARNING: ".str_replace(ABSPATH, '', $location) . ' - ' . strip_tags($message). "</li>";
 			}
 			echo '</ol>';
 		}
 		if ( count( $this->notices ) ) {
 			echo '<ol class="debug-bar-php-list">';
-			foreach ( $this->notices as $location_message_stack) {
-				list( $location, $message, $stack) = $location_message_stack;
-				echo '<li class="debug-bar-php-notice">NOTICE: ';
-				echo str_replace(ABSPATH, '', $location) . ' - ' . strip_tags($message);
-				echo '<br/>';
-				echo $stack;
-				echo '</li>';
+			foreach ( $this->notices as $location_message) {
+				list( $location, $message) = $location_message;
+				echo "<li  class='debug-bar-php-notice'>NOTICE: ".str_replace(ABSPATH, '', $location) . ' - ' . strip_tags($message). "</li>";
 			}
 			echo '</ol>';
 		}
@@ -88,4 +80,3 @@ class Debug_Bar_PHP extends Debug_Bar_Panel {
 
 	}
 }
-

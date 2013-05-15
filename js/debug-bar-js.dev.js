@@ -1,22 +1,7 @@
 (function() {
-	var count, list, dbjsError,
-		rawCount = 0,
-		errors = [];
+	var count, list, rawCount = 0;
 
 	window.onerror = function( errorMsg, url, lineNumber ) {
-		if ( ! document.getElementById( 'debug-bar-js-error-count' ) )
-			errors[ errors.length ] = [errorMsg, url, lineNumber];
-		else
-			dbjsError(errorMsg, url, lineNumber);
-	}
-
-	jQuery(document).ready( function(){
-		for ( err in errors )
-			dbjsError( errors[err][0], errors[err][1], errors[err][2] );
-
-	});
-
-	dbjsError = function( errorMsg, url, lineNumber ) {
 
 		var errorLine, place, button, tab;
 
@@ -51,6 +36,11 @@
 		errorLine.appendChild( place );
 		list.appendChild( errorLine );
 
+		return false;
 	};
 
+	// suppress error handling
+	window.addEventListener( 'error', function( e ) {
+		e.preventDefault();
+	}, true );
 })();
