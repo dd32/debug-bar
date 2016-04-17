@@ -22,26 +22,40 @@
 
 		rawCount++;
 
-		if ( !menuCount )
+		if ( ! menuCount ) {
 			menuCount = document.getElementById( 'debug-bar-js-issue-count' );
-		if ( !count )
+		}
+		if ( ! count ) {
 			count = document.getElementById( 'debug-bar-js-error-count' );
-		if ( !list )
+		}
+		if ( ! list ) {
 			list = document.getElementById( 'debug-bar-js-errors' );
+		}
 
-		if ( !count || !list )
+		if ( ! count || !list ) {
 			return; // threw way too early... @todo cache these?
+		}
 
 		if ( 1 == rawCount ) {
 			button = document.getElementById( 'wp-admin-bar-debug-bar' );
-			if ( !button )
+			if ( ! button ) {
 				return; // how did this happen?
-			if ( button.className.indexOf( 'debug-bar-warning-summary' ) === -1 )
+			}
+			if ( button.className.indexOf( 'debug-bar-warning-summary' ) === -1 ) {
 				button.className = button.className + ' debug-bar-warning-summary';
+			}
 
-			tab = document.getElementById('debug-menu-link-Debug_Bar_JS');
-			if ( tab )
+			tab = document.getElementById( 'debug-menu-link-Debug_Bar_JS' );
+			if ( tab ) {
 				tab.style.display = 'block';
+			}
+
+			if ( menuCount.className.indexOf( 'debug-bar-issue-count' ) === -1 ) {
+				menuCount.className = menuCount.className + ' debug-bar-issue-count';
+			}
+			if ( menuCount.className.indexOf( 'debug-bar-issue-warnings' ) === -1 ) {
+				menuCount.className = menuCount.className + ' debug-bar-issue-warnings';
+			}
 		}
 
 		count.textContent = rawCount;
