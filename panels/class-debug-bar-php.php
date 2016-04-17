@@ -1,8 +1,11 @@
 <?php
 
 class Debug_Bar_PHP extends Debug_Bar_Panel {
-	static $warnings = array();
-	static $notices = array();
+	static $warnings   = array();
+	static $notices    = array();
+	static $strict     = array();
+	static $deprecated = array();
+	static $silenced   = array();
 	static $real_error_handler;
 
 	static function start_logging() {
@@ -40,44 +43,41 @@ class Debug_Bar_PHP extends Debug_Bar_Panel {
 	}
 
 	function get_total() {
-		return count( self::$notices ) + count( self::$warnings );
+		return count( self::$notices ) + count( self::$warnings ) + count( self::$strict ) + count( self::$deprecated ) + count( self::$silenced );
 	}
 
 	function debug_bar_classes( $classes ) {
 		if ( count( self::$warnings ) ) {
 			$classes[] = 'debug-bar-warning-summary';
-		} elseif ( count( self::$notices ) ) {
+		} elseif ( $this->get_total() ) {
 			$classes[] = 'debug-bar-notice-summary';
 		}
 		return $classes;
 	}
 
 	static function error_handler( $type, $message, $file, $line ) {
-		if( ! ( error_reporting() & $type ) ) {
-			return false;
-		}
-
 		$_key = md5( $file . ':' . $line . ':' . $message );
 
-		switch ( $type ) {
-			case E_WARNING :
-			case E_USER_WARNING :
-				self::$warnings[$_key] = array( $file.':'.$line, $message, wp_debug_backtrace_summary( __CLASS__ ) );
-				break;
-			case E_NOTICE :
-			case E_USER_NOTICE :
-				self::$notices[$_key] = array( $file.':'.$line, $message, wp_debug_backtrace_summary( __CLASS__ ) );
-				break;
-			case E_STRICT :
-				// TODO
-				break;
-			case E_DEPRECATED :
-			case E_USER_DEPRECATED :
-				// TODO
-				break;
-			case 0 :
-				// TODO
-				break;
+		if ( 0 === error_reporting() ) {
+			self::$silenced[ $_key ] = array( $file . ':' . $line, $message, wp_debug_backtrace_summary( __CLASS__ ) );
+		} else {
+			switch ( $type ) {
+				case E_WARNING :
+				case E_USER_WARNING :
+					self::$warnings[ $_key ] = array( $file . ':' . $line, $message, wp_debug_backtrace_summary( __CLASS__ ) );
+					break;
+				case E_NOTICE :
+				case E_USER_NOTICE :
+					self::$notices[ $_key ] = array( $file . ':' . $line, $message, wp_debug_backtrace_summary( __CLASS__ ) );
+					break;
+				case E_STRICT :
+					self::$strict[ $_key ] = array( $file . ':' . $line, $message, wp_debug_backtrace_summary( __CLASS__ ) );
+					break;
+				case E_DEPRECATED :
+				case E_USER_DEPRECATED :
+					self::$deprecated[ $_key ] = array( $file . ':' . $line, $message, wp_debug_backtrace_summary( __CLASS__ ) );
+					break;
+			}
 		}
 
 		if ( isset( self::$real_error_handler ) ) {
@@ -92,9 +92,15 @@ class Debug_Bar_PHP extends Debug_Bar_Panel {
 
 		$this->render_title ( __( 'Total Warnings:', 'debug-bar' ), count( self::$warnings ) );
 		$this->render_title ( __( 'Total Notices:', 'debug-bar' ), count( self::$notices ) );
+		$this->render_title ( __( 'Total Strict Notices:', 'debug-bar' ), count( self::$strict ) );
+		$this->render_title ( __( 'Total Deprecated:', 'debug-bar' ), count( self::$deprecated ) );
+		$this->render_title ( __( 'Total Silenced:', 'debug-bar' ), count( self::$silenced ) );
 
 		$this->render_list( self::$warnings, __( 'WARNING:', 'debug-bar' ), 'warning' );
 		$this->render_list( self::$notices, __( 'NOTICE:', 'debug-bar' ), 'notice' );
+		$this->render_list( self::$strict, __( 'STRICT:', 'debug-bar' ), 'notice' );
+		$this->render_list( self::$deprecated, __( 'DEPRECATED:', 'debug-bar' ), 'notice' );
+		$this->render_list( self::$silenced, __( 'SILENCED:', 'debug-bar' ), 'warning' );
 
 		echo '</div>';
 	}
