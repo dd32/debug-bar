@@ -5,14 +5,16 @@ class Debug_Bar_Deprecated extends Debug_Bar_Panel {
 	static $deprecated_functions = array();
 	static $deprecated_files = array();
 	static $deprecated_arguments = array();
+	static $deprecated_constructors = array();
 
 	static function start_logging() {
 		add_action( 'deprecated_function_run', array( __CLASS__, 'deprecated_function_run' ), 10, 3 );
 		add_action( 'deprecated_file_included', array( __CLASS__, 'deprecated_file_included' ), 10, 4 );
 		add_action( 'deprecated_argument_run',  array( __CLASS__, 'deprecated_argument_run' ),  10, 3 );
+		add_action( 'deprecated_constructor_run',  array( __CLASS__, 'deprecated_constructor_run' ),  10, 3 );
 
 		// Silence E_NOTICE for deprecated usage.
-		foreach ( array( 'function', 'file', 'argument' ) as $item ) {
+		foreach ( array( 'function', 'file', 'argument', 'constructor' ) as $item ) {
 			add_filter( "deprecated_{$item}_trigger_error", '__return_false' );
 		}
 	}
@@ -21,9 +23,10 @@ class Debug_Bar_Deprecated extends Debug_Bar_Panel {
 		remove_action( 'deprecated_function_run', array( __CLASS__, 'deprecated_function_run' ), 10 );
 		remove_action( 'deprecated_file_included', array( __CLASS__, 'deprecated_file_included' ), 10 );
 		remove_action( 'deprecated_argument_run',  array( __CLASS__, 'deprecated_argument_run' ),  10 );
+		remove_action( 'deprecated_constructor_run',  array( __CLASS__, 'deprecated_constructor_run' ),  10 );
 
 		// Don't silence E_NOTICE for deprecated usage.
-		foreach ( array( 'function', 'file', 'argument' ) as $item ) {
+		foreach ( array( 'function', 'file', 'argument', 'constructor' ) as $item ) {
 			remove_filter( "deprecated_{$item}_trigger_error", '__return_false' );
 		}
 	}
@@ -37,6 +40,7 @@ class Debug_Bar_Deprecated extends Debug_Bar_Panel {
 			count( self::$deprecated_functions )
 			|| count( self::$deprecated_files )
 			|| count( self::$deprecated_arguments )
+			|| count( self::$deprecated_constructors )
 		);
 	}
 
@@ -46,10 +50,12 @@ class Debug_Bar_Deprecated extends Debug_Bar_Panel {
 		$this->render_title( __( 'Total Functions:', 'debug-bar' ), count( self::$deprecated_functions ) );
 		$this->render_title( __( 'Total Files:', 'debug-bar' ), count( self::$deprecated_files ) );
 		$this->render_title( __( 'Total Arguments:', 'debug-bar' ), count( self::$deprecated_arguments ) );
+		$this->render_title( __( 'Total Constructors:', 'debug-bar' ), count( self::$deprecated_constructors ) );
 
 		$this->render_list( self::$deprecated_functions, 'deprecated-function' );
 		$this->render_list( self::$deprecated_files, 'deprecated-file' );
 		$this->render_list( self::$deprecated_arguments, 'deprecated-argument' );
+		$this->render_list( self::$deprecated_constructors, 'deprecated-constructor' );
 
 		echo '</div>';
 	}
@@ -121,5 +127,27 @@ class Debug_Bar_Deprecated extends Debug_Bar_Panel {
 		$line = $backtrace[ $bt ]['line'];
 
 		self::$deprecated_functions[ $file . ':' . $line ] = array( $message, wp_debug_backtrace_summary( null, $bt ) );
+	}
+
+	static function deprecated_constructor_run( $class, $version, $parent_class = '' ) {
+		$backtrace = debug_backtrace( false );
+		$bt = 4;
+		if ( ! isset( $backtrace[4]['file'] ) && 'call_user_func_array' == $backtrace[5]['function'] ) {
+			$bt = 6;
+		}
+		$file = $backtrace[ $bt ]['file'];
+		$line = $backtrace[ $bt ]['line'];
+
+		if ( ! empty( $parent_class ) ) {
+			/* translators: 1: PHP class name, 2: PHP parent class name, 3: version number, 4: __construct() method */
+			$message = sprintf( __( 'The called constructor method for %1$s in %2$s is <strong>deprecated</strong> since version %3$s! Use %4$s instead.', 'debug-bar' ),
+				$class, $parent_class, $version, '<pre>__construct()</pre>' );
+		} else {
+			/* translators: 1: PHP class name, 2: version number, 3: __construct() method */
+			$message = sprintf( __( 'The called constructor method for %1$s is <strong>deprecated</strong> since version %2$s! Use %3$s instead.', 'debug-bar' ),
+				$class, $version, '<pre>__construct()</pre>' );
+		}
+
+		self::$deprecated_constructors[ $file . ':' . $line ] = array( $message, wp_debug_backtrace_summary( null, $bt ) );
 	}
 }
