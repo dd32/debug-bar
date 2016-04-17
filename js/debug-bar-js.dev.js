@@ -1,7 +1,8 @@
 (function() {
-	var count, list, dbjsError,
+	var count, list, dbjsError, isReady
 		rawCount = 0,
 		errors = [];
+
 
 	window.onerror = function( errorMsg, url, lineNumber ) {
 		if ( ! document.getElementById( 'debug-bar-js-error-count' ) )
@@ -10,11 +11,38 @@
 			dbjsError(errorMsg, url, lineNumber);
 	}
 
-	jQuery(document).ready( function(){
-		for ( err in errors )
-			dbjsError( errors[err][0], errors[err][1], errors[err][2] );
 
-	});
+	if ( typeof jQuery != 'undefined' ) {
+		jQuery(document).ready( function(){
+			for ( err in errors ) {
+				dbjsError( errors[err][0], errors[err][1], errors[err][2] );
+			}
+		});
+	} else {
+		// @see http://gomakethings.com/a-native-javascript-equivalent-of-jquerys-ready-method/
+		isReady = function ( fn ) {
+			// Sanity check
+			if ( typeof fn !== 'function' ) return;
+
+			// If document is already loaded, run method
+			if ( document.readyState === 'interactive' || document.readyState === 'complete' ) {
+				return fn();
+			}
+
+			// Otherwise, wait until document is loaded
+			// The document has finished loading and the document has been parsed but sub-resources such as images, stylesheets and frames are still loading. The state indicates that the DOMContentLoaded event has been fired.
+			//document.addEventListener( 'interactive', fn, false );
+			document.addEventListener( 'DOMContentLoaded', fn, false );
+		};
+
+		isReady( function(){
+			for ( err in errors ) {
+				dbjsError( errors[err][0], errors[err][1], errors[err][2] );
+			}
+		});
+	}
+
+
 
 	dbjsError = function( errorMsg, url, lineNumber ) {
 
