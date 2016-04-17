@@ -18,12 +18,19 @@
  */
 
 class Debug_Bar {
+	var $path;
 	var $panels = array();
 
 	function __construct() {
 		if ( defined('DOING_AJAX') && DOING_AJAX )
 			add_action( 'admin_init', array( &$this, 'init_ajax' ) );
 		add_action( 'admin_bar_init', array( &$this, 'init' ) );
+
+		$this->path = plugin_dir_path( __FILE__ );
+
+		$this->early_requirements();
+		Debug_Bar_PHP::start_logging();
+		Debug_Bar_Deprecated::start_logging();
 	}
 
 	function Debug_Bar() {
@@ -31,8 +38,11 @@ class Debug_Bar {
 	}
 
 	function init() {
-		if ( ! is_super_admin() || ! is_admin_bar_showing() || $this->is_wp_login() )
+		if ( ! is_super_admin() || ! is_admin_bar_showing() || $this->is_wp_login() ) {
+			Debug_Bar_PHP::stop_logging();
+			Debug_Bar_Deprecated::stop_logging();
 			return;
+		}
 
 		add_action( 'admin_bar_menu',               array( &$this, 'admin_bar_menu' ), 1000 );
 		add_action( 'admin_footer',                 array( &$this, 'render' ), 1000 );
@@ -54,19 +64,31 @@ class Debug_Bar {
 	}
 
 	function init_ajax() {
-		if ( ! is_super_admin() )
+		if ( ! is_super_admin() ) {
+			Debug_Bar_PHP::stop_logging();
+			Debug_Bar_Deprecated::stop_logging();
 			return;
+		}
 
 		$this->requirements();
 		$this->init_panels();
 	}
 
+	function early_requirements() {
+		require_once( $this->path . '/compat.php' );
+		$recs = array( 'panel', 'php', 'deprecated' );
+		$this->include_files( $recs );
+	}
+
 	function requirements() {
-		$path = plugin_dir_path( __FILE__ );
-		require_once( $path . '/compat.php' );
-		$recs = array( 'panel', 'php', 'queries', 'request', 'wp-query', 'object-cache', 'deprecated', 'js' );
-		foreach ( $recs as $rec )
-			require_once "$path/panels/class-debug-bar-$rec.php";
+		$recs = array( 'queries', 'request', 'wp-query', 'object-cache', 'js' );
+		$this->include_files( $recs );
+	}
+
+	function include_files( $recs ) {
+		foreach ( $recs as $rec ) {
+			require_once $this->path . "/panels/class-debug-bar-$rec.php";
+		}
 	}
 
 	function enqueue() {
