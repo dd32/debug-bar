@@ -18,14 +18,29 @@ class Debug_Bar_PHP extends Debug_Bar_Panel {
 	}
 
 	function init() {
-		if ( ! WP_DEBUG )
+		if ( ! WP_DEBUG ) {
 			return false;
+		}
 
 		$this->title( __('Notices / Warnings', 'debug-bar') );
+		$this->set_visible( false );
 	}
 
 	function is_visible() {
-		return count( self::$notices ) || count( self::$warnings );
+		return ( $this->get_total() > 0 );
+	}
+
+	function prerender() {
+		$total = $this->get_total();
+
+		if ( $total > 0 ) {
+			$warnings = ( count( self::$warnings ) > 0 ? ' debug-bar-issue-warnings' : '' );
+			$this->title( $this->title() . '<span class="debug-bar-issue-count' . $warnings . '">' . absint( $total ) . '</span>' );
+		}
+	}
+
+	function get_total() {
+		return count( self::$notices ) + count( self::$warnings );
 	}
 
 	function debug_bar_classes( $classes ) {

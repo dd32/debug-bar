@@ -1,5 +1,5 @@
 (function() {
-	var count, list, dbjsError,
+	var count, menuCount, list, dbjsError,
 		rawCount = 0,
 		errors = [];
 
@@ -22,6 +22,8 @@
 
 		rawCount++;
 
+		if ( !menuCount )
+			menuCount = document.getElementById( 'debug-bar-js-issue-count' );
 		if ( !count )
 			count = document.getElementById( 'debug-bar-js-error-count' );
 		if ( !list )
@@ -43,6 +45,7 @@
 		}
 
 		count.textContent = rawCount;
+		menuCount.textContent = rawCount;
 		errorLine = document.createElement( 'li' );
 		errorLine.className = 'debug-bar-js-error';
 		errorLine.textContent = errorMsg;

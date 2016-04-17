@@ -203,6 +203,7 @@ body.debug-bar-maximized.debug-bar-visible {
 }
 
 #debug-menu-links li a {
+	box-sizing: content-box;
 	padding: 0 20px;
 	width: 210px;
 	line-height: 40px;
@@ -217,6 +218,30 @@ body.debug-bar-maximized.debug-bar-visible {
 
 #debug-menu-links li a.current {
 	background: rgba( 0, 0, 0, 0.2 );
+}
+
+#debug-menu-links li span.debug-bar-issue-count {
+	float: right;
+	background-color: #ee6f00;
+	background-image: -moz-linear-gradient(bottom, #d54e21, #ee6f00);
+	background-image: -webkit-gradient(linear, left bottom, left top, from(#d54e21), to(#ee6f00));
+	color: #fff;
+	text-shadow: 0 -1px 0 #700;
+	border-radius: 50%;
+	font-size: 85%;
+	display: inline-block;
+	width: 21px;
+	height: 21px;
+	line-height: 20px;
+	margin: 6px 5px 0 0;
+	text-align: center;
+	vertical-align: middle;
+}
+
+#debug-menu-links li span.debug-bar-issue-count.debug-bar-issue-warnings {
+	background-color: #d00;
+	background-image: -moz-linear-gradient(bottom, #c40000, #d00);
+	background-image: -webkit-gradient(linear, left bottom, left top, from(#c40000), to(#d00));
 }
 
 #querylist h2 {

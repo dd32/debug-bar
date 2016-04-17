@@ -33,15 +33,23 @@ class Debug_Bar_Deprecated extends Debug_Bar_Panel {
 
 	function init() {
 		$this->title( __('Deprecated', 'debug-bar') );
+		$this->set_visible( false );
+	}
+
+	function is_visible() {
+		return ( $this->get_total() > 0 );
 	}
 
 	function prerender() {
-		$this->set_visible(
-			count( self::$deprecated_functions )
-			|| count( self::$deprecated_files )
-			|| count( self::$deprecated_arguments )
-			|| count( self::$deprecated_constructors )
-		);
+		$total = $this->get_total();
+
+		if ( $total > 0 ) {
+			$this->title( $this->title() . '<span class="debug-bar-issue-count">' . absint( $total ) . '</span>' );
+		}
+	}
+
+	function get_total() {
+		return count( self::$deprecated_functions ) + count( self::$deprecated_files ) + count( self::$deprecated_arguments ) + count( self::$deprecated_constructors );
 	}
 
 	function render() {
