@@ -6,6 +6,8 @@
  Author: wordpressdotorg
  Version: 0.8.4
  Author URI: https://wordpress.org/
+ Text Domain: debug-bar
+ Domain Path: /languages
  */
 
 /***
@@ -18,28 +20,44 @@
  */
 
 class Debug_Bar {
+	var $path;
 	var $panels = array();
 
 	function __construct() {
-		if ( defined('DOING_AJAX') && DOING_AJAX )
-			add_action( 'admin_init', array( &$this, 'init_ajax' ) );
-		add_action( 'admin_bar_init', array( &$this, 'init' ) );
+		if ( defined('DOING_AJAX') && DOING_AJAX ) {
+			add_action( 'admin_init', array( $this, 'init_ajax' ) );
+		}
+		add_action( 'admin_bar_init', array( $this, 'init' ) );
+
+		$this->path = plugin_dir_path( __FILE__ );
+
+		$this->early_requirements();
+		Debug_Bar_PHP::start_logging();
+		Debug_Bar_Deprecated::start_logging();
+		Debug_Bar_Doing_It_Wrong::start_logging();
 	}
 
 	function Debug_Bar() {
-		Debug_Bar::__construct();
+		_deprecated_constructor( __METHOD__, '0.8.5', __CLASS__ );
+		self::__construct();
 	}
 
 	function init() {
-		if ( ! is_super_admin() || ! is_admin_bar_showing() || $this->is_wp_login() )
+		if ( ! $this->enable_debug_bar() ) {
+			Debug_Bar_PHP::stop_logging();
+			Debug_Bar_Deprecated::stop_logging();
+			Debug_Bar_Doing_It_Wrong::stop_logging();
 			return;
+		}
 
-		add_action( 'admin_bar_menu',               array( &$this, 'admin_bar_menu' ), 1000 );
-		add_action( 'admin_footer',                 array( &$this, 'render' ), 1000 );
-		add_action( 'wp_footer',                    array( &$this, 'render' ), 1000 );
-		add_action( 'wp_head',                      array( &$this, 'ensure_ajaxurl' ), 1 );
-		add_filter( 'body_class',                   array( &$this, 'body_class' ) );
-		add_filter( 'admin_body_class',             array( &$this, 'body_class' ) );
+		self::load_textdomain( 'debug-bar' );
+
+		add_action( 'admin_bar_menu',               array( $this, 'admin_bar_menu' ), 1000 );
+		add_action( 'admin_footer',                 array( $this, 'render' ), 1000 );
+		add_action( 'wp_footer',                    array( $this, 'render' ), 1000 );
+		add_action( 'wp_head',                      array( $this, 'ensure_ajaxurl' ), 1 );
+		add_filter( 'body_class',                   array( $this, 'body_class' ) );
+		add_filter( 'admin_body_class',             array( $this, 'body_class' ) );
 
 		$this->requirements();
 		$this->enqueue();
@@ -53,20 +71,77 @@ class Debug_Bar {
 		return 'wp-login.php' == basename( $_SERVER['SCRIPT_NAME'] );
 	}
 
-	function init_ajax() {
-		if ( ! is_super_admin() )
+	/**
+	 * Should the debug bar functionality be enabled ?
+	 *
+	 * @param bool $ajax Whether this is an ajax call or not. Defaults to false.
+	 * @return bool
+	 */
+	function enable_debug_bar( $ajax = false ) {
+		$enable = false;
+		if ( $ajax && is_super_admin() ) {
+			$enable = true;
+		} elseif ( ! $ajax && ( is_super_admin() && is_admin_bar_showing() && ! $this->is_wp_login() ) ) {
+			$enable = true;
+		}
+
+		/**
+		 * Allows for overruling of whether the debug bar functionality will be enabled.
+		 *
+		 * @since 0.8.5
+		 *
+		 * @param bool $enable Whether the debug bar will be enabled or not.
+		 */
+		return apply_filters( 'debug_bar_enable', $enable );
+	}
+
+	/**
+	 * Load the plugin text strings.
+	 *
+	 * Compatible with use of the plugin in the must-use plugins directory.
+	 *
+	 * @param string $domain Text domain to load.
+	 */
+	static function load_textdomain( $domain ) {
+		if ( is_textdomain_loaded( $domain ) ) {
 			return;
+		}
+
+		$lang_path = dirname( plugin_basename( __FILE__ ) ) . '/languages';
+		if ( false === strpos( __FILE__, basename( WPMU_PLUGIN_DIR ) ) ) {
+			load_plugin_textdomain( $domain, false, $lang_path );
+		} else {
+			load_muplugin_textdomain( $domain, $lang_path );
+		}
+	}
+
+	function init_ajax() {
+		if ( ! $this->enable_debug_bar( true ) ) {
+			Debug_Bar_PHP::stop_logging();
+			Debug_Bar_Deprecated::stop_logging();
+			Debug_Bar_Doing_It_Wrong::stop_logging();
+			return;
+		}
 
 		$this->requirements();
 		$this->init_panels();
 	}
 
+	function early_requirements() {
+		require_once( $this->path . '/compat.php' );
+		$recs = array( 'panel', 'php', 'deprecated', 'doingitwrong' );
+		$this->include_files( $recs );
+	}
+
 	function requirements() {
-		$path = plugin_dir_path( __FILE__ );
-		require_once( $path . '/compat.php' );
-		$recs = array( 'panel', 'php', 'queries', 'request', 'wp-query', 'object-cache', 'deprecated', 'js' );
-		foreach ( $recs as $rec )
-			require_once "$path/panels/class-debug-bar-$rec.php";
+		$recs = array( 'queries', 'request', 'wp-query', 'object-cache', 'js' );
+		$this->include_files( $recs );
+	}
+
+	function include_files( $recs ) {
+		foreach ( $recs as $rec ) {
+			require_once $this->path . "/panels/class-debug-bar-$rec.php";
+		}
 	}
 
 	function enqueue() {
@@ -85,6 +160,7 @@ class Debug_Bar {
 			'Debug_Bar_Queries',
 			'Debug_Bar_WP_Query',
 			'Debug_Bar_Deprecated',
+			'Debug_Bar_Doing_It_Wrong',
 			'Debug_Bar_Request',
 			'Debug_Bar_Object_Cache',
 			'Debug_Bar_JS',
@@ -120,7 +196,7 @@ class Debug_Bar {
 		global $wp_admin_bar;
 
 		$classes = apply_filters( 'debug_bar_classes', array() );
-		$classes = implode( " ", $classes );
+		$classes = implode( " ", array_unique( $classes ) );
 
 		/* Add the main siteadmin menu item */
 		$wp_admin_bar->add_menu( array(
@@ -186,14 +262,37 @@ class Debug_Bar {
 		<div id="debug-status">
 			<?php //@todo: Add a links to information about WP_DEBUG, PHP version, MySQL version, and Peak Memory.
 			$statuses = array();
-			$statuses[] = array( 'site', php_uname( 'n' ), sprintf( __( '#%d', 'debug-bar' ), get_current_blog_id() ) );
-			$statuses[] = array( 'php', __('PHP', 'debug-bar'), phpversion() );
-			$db_title = empty( $wpdb->is_mysql ) ? __( 'DB', 'debug-bar' ) : 'MySQL';
-			$statuses[] = array( 'db', $db_title, $wpdb->db_version() );
-			$statuses[] = array( 'memory', __('Memory Usage', 'debug-bar'), sprintf( __('%s bytes', 'debug-bar'), number_format_i18n( $this->safe_memory_get_peak_usage() ) ) );
+			$statuses[] = array(
+				'site',
+				php_uname( 'n' ),
+				/* TRANSLATORS: %d is the site id number in a multi-site setting. */
+				sprintf( __( '#%d', 'debug-bar' ), get_current_blog_id() ),
+			);
+			$statuses[] = array(
+				'php',
+				__( 'PHP', 'debug-bar' ),
+				phpversion(),
+			);
+			$db_title = empty( $wpdb->is_mysql ) ? __( 'DB', 'debug-bar' ) : __( 'MySQL', 'debug-bar' );
+			$statuses[] = array(
+				'db',
+				$db_title,
+				$wpdb->db_version(),
+			);
+			$statuses[] = array(
+				'memory',
+				__( 'Memory Usage', 'debug-bar' ),
+				/* TRANSLATORS: %s is a formatted number representing the memory usage. */
+				sprintf( __( '%s bytes', 'debug-bar' ), number_format_i18n( $this->safe_memory_get_peak_usage() ) ),
+			);
 
-			if ( ! WP_DEBUG )
-				$statuses[] = array( 'warning', __('Please Enable', 'debug-bar'), 'WP_DEBUG' );
+			if ( ! WP_DEBUG ) {
+				$statuses[] = array(
+					'warning',
+					__( 'Please Enable', 'debug-bar' ),
+					'WP_DEBUG',
+				);
+			}
 
 			$statuses = apply_filters( 'debug_bar_statuses', $statuses );
 

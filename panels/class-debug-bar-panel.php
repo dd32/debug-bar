@@ -12,11 +12,12 @@ class Debug_Bar_Panel {
 			return;
 		}
 
-		add_filter( 'debug_bar_classes', array( &$this, 'debug_bar_classes' ) );
+		add_filter( 'debug_bar_classes', array( $this, 'debug_bar_classes' ) );
 	}
 
 	function Debug_Bar_Panel( $title = '' ) {
-		Debug_Bar_Panel::__construct( $title );
+		_deprecated_constructor( __METHOD__, '0.8.5', __CLASS__ );
+		self::__construct( $title );
 	}
 
 	/**
