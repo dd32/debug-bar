@@ -98,13 +98,13 @@ class Debug_Bar_Deprecated extends Debug_Bar_Panel {
 		else
 			$message = sprintf( __('%1$s is <strong>deprecated</strong> since version %2$s with no alternative available.', 'debug-bar'), $file_abs, $version ) . $message;
 
-		$this->deprecated_functions[$file.':'.$line] = array( $message, wp_debug_backtrace_summary( null, 4 ) );
+		$this->deprecated_files[$file.':'.$line] = array( $message, wp_debug_backtrace_summary( null, 4 ) );
 	}
 
 	function deprecated_argument_run( $function, $message, $version) {
 		$backtrace = debug_backtrace( false );
 		if ( $function === 'define()' ) {
-			$this->deprecated_functions[] = array( $message, '' );
+			$this->deprecated_arguments[] = array( $message, '' );
 			return;
 		}
 
@@ -115,6 +115,6 @@ class Debug_Bar_Deprecated extends Debug_Bar_Panel {
 		$file = $backtrace[ $bt ]['file'];
 		$line = $backtrace[ $bt ]['line'];
 
-		$this->deprecated_functions[$file.':'.$line] = array( $message, wp_debug_backtrace_summary( null, $bt ) );
+		$this->deprecated_arguments[$file.':'.$line] = array( $message, wp_debug_backtrace_summary( null, $bt ) );
 	}
 }
