@@ -113,11 +113,11 @@ $(document ).ready( function() {
 	hasNotices   = $( '#debug-menu-links span.debug-bar-issue-count' );
 	button       = $( '#wp-admin-bar-debug-bar' );
 
-	if ( 0 !== hasPHPErrors.length ) {
+	if ( 0 < hasPHPErrors.length ) {
 		if ( button && ! button.hasClass( 'debug-bar-warning-summary' ) ) {
 			button.addClass( 'debug-bar-warning-summary' );
 		}
-	} else if ( 0 !== hasNotices.length ) {
+	} else if ( 0 < hasNotices.length ) {
 		button = $( '#wp-admin-bar-debug-bar' );
 		if ( button && ! button.hasClass( 'debug-bar-notice-summary' ) ) {
 			button.addClass( 'debug-bar-notice-summary' );
