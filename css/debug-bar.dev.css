@@ -361,7 +361,8 @@ body.debug-bar-maximized.debug-bar-visible {
 #debug-bar-doingitwrong ol.debug-bar-deprecated-list li {
 	padding: 10px;
 	margin: 0 0 10px 0;
-	background: #f0f0f0;
+	background-color: #ffffe0;
+	border: 1px solid #e6db55;
 }
 
 #debug-bar-wp-query table.debug-bar-wp-query-list {
