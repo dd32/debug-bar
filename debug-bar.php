@@ -31,6 +31,7 @@ class Debug_Bar {
 		$this->early_requirements();
 		Debug_Bar_PHP::start_logging();
 		Debug_Bar_Deprecated::start_logging();
+		Debug_Bar_Doing_It_Wrong::start_logging();
 	}
 
 	function Debug_Bar() {
@@ -41,6 +42,7 @@ class Debug_Bar {
 		if ( ! is_super_admin() || ! is_admin_bar_showing() || $this->is_wp_login() ) {
 			Debug_Bar_PHP::stop_logging();
 			Debug_Bar_Deprecated::stop_logging();
+			Debug_Bar_Doing_It_Wrong::stop_logging();
 			return;
 		}
 
@@ -67,6 +69,7 @@ class Debug_Bar {
 		if ( ! is_super_admin() ) {
 			Debug_Bar_PHP::stop_logging();
 			Debug_Bar_Deprecated::stop_logging();
+			Debug_Bar_Doing_It_Wrong::stop_logging();
 			return;
 		}
 
@@ -76,7 +79,7 @@ class Debug_Bar {
 
 	function early_requirements() {
 		require_once( $this->path . '/compat.php' );
-		$recs = array( 'panel', 'php', 'deprecated' );
+		$recs = array( 'panel', 'php', 'deprecated', 'doingitwrong' );
 		$this->include_files( $recs );
 	}
 
@@ -107,6 +110,7 @@ class Debug_Bar {
 			'Debug_Bar_Queries',
 			'Debug_Bar_WP_Query',
 			'Debug_Bar_Deprecated',
+			'Debug_Bar_Doing_It_Wrong',
 			'Debug_Bar_Request',
 			'Debug_Bar_Object_Cache',
 			'Debug_Bar_JS',
