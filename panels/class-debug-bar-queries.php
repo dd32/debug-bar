@@ -11,7 +11,7 @@ class Debug_Bar_Queries extends Debug_Bar_Panel {
 
 	function debug_bar_classes( $classes ) {
 		if ( ! empty($GLOBALS['EZSQL_ERROR']) )
-			$classes[] = 'debug-bar-php-warning-summary';
+			$classes[] = 'debug-bar-warning-summary';
 		return $classes;
 	}
 
