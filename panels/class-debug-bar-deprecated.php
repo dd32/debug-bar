@@ -41,47 +41,38 @@ class Debug_Bar_Deprecated extends Debug_Bar_Panel {
 	}
 
 	function render() {
-		echo "<div id='debug-bar-deprecated'>";
-		echo '<h2><span>Total Functions:</span>' . number_format( count( self::$deprecated_functions ) ) . "</h2>\n";
-		echo '<h2><span>Total Arguments:</span>' . number_format( count( self::$deprecated_arguments ) ) . "</h2>\n";
-		echo '<h2><span>Total Files:</span>' . number_format( count( self::$deprecated_files ) ) . "</h2>\n";
-		if ( count( self::$deprecated_functions ) ) {
+		echo '<div id="debug-bar-deprecated">';
+
+		$this->render_title( __( 'Total Functions:', 'debug-bar' ), count( self::$deprecated_functions ) );
+		$this->render_title( __( 'Total Files:', 'debug-bar' ), count( self::$deprecated_files ) );
+		$this->render_title( __( 'Total Arguments:', 'debug-bar' ), count( self::$deprecated_arguments ) );
+
+		$this->render_list( self::$deprecated_functions, 'deprecated-function' );
+		$this->render_list( self::$deprecated_files, 'deprecated-file' );
+		$this->render_list( self::$deprecated_arguments, 'deprecated-argument' );
+
+		echo '</div>';
+	}
+
+	function render_title( $title, $count ) {
+		echo '<h2><span>', $title, '</span>', absint( $count ), "</h2>\n";
+	}
+
+	function render_list( $calls, $class ) {
+		if ( count( $calls ) ) {
 			echo '<ol class="debug-bar-deprecated-list">';
-			foreach ( self::$deprecated_functions as $location => $message_stack) {
-				list( $message, $stack) = $message_stack;
-				echo "<li class='debug-bar-deprecated-function'>";
-				echo str_replace(ABSPATH, '', $location) . ' - ' . strip_tags($message);
-				echo "<br/>";
-				echo $stack;
-				echo "</li>";
+			foreach ( $calls as $location => $message_stack ) {
+				list( $message, $stack ) = $message_stack;
+
+				echo '
+				<li class="debug-bar-', $class, '">',
+				str_replace( ABSPATH, '', $location ), ' - ', strip_tags( $message ),
+				'<br/>',
+				$stack,
+				'</li>';
 			}
 			echo '</ol>';
 		}
-		if ( count( self::$deprecated_files ) ) {
-			echo '<ol class="debug-bar-deprecated-list">';
-			foreach ( self::$deprecated_files as $location => $message_stack) {
-				list( $message, $stack) = $message_stack;
-				echo "<li class='debug-bar-deprecated-file'>";
-				echo str_replace(ABSPATH, '', $location) . ' - ' . strip_tags($message);
-				echo "<br/>";
-				echo $stack;
-				echo "</li>";
-			}
-			echo '</ol>';
-		}
-		if ( count( self::$deprecated_arguments ) ) {
-			echo '<ol class="debug-bar-deprecated-list">';
-			foreach ( self::$deprecated_arguments as $location => $message_stack) {
-				list( $message, $stack) = $message_stack;
-				echo "<li class='debug-bar-deprecated-argument'>";
-				echo str_replace(ABSPATH, '', $location) . ' - ' . strip_tags($message);
-				echo "<br/>";
-				echo $stack;
-				echo "</li>";
-			}
-			echo '</ol>';
-		}
-		echo "</div>";
 	}
 
 	static function deprecated_function_run($function, $replacement, $version) {

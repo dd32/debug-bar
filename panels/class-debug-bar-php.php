@@ -73,35 +73,35 @@ class Debug_Bar_PHP extends Debug_Bar_Panel {
 	}
 
 	function render() {
-		echo "<div id='debug-bar-php'>";
-		echo '<h2><span>Total Warnings:</span>' . number_format( count( self::$warnings ) ) . "</h2>\n";
-		echo '<h2><span>Total Notices:</span>' . number_format( count( self::$notices ) ) . "</h2>\n";
-		if ( count( self::$warnings ) ) {
-			echo '<ol class="debug-bar-php-list">';
-			foreach ( self::$warnings as $location_message_stack ) {
-				list( $location, $message, $stack) = $location_message_stack;
-				echo '<li class="debug-bar-php-warning">WARNING: ';
-				echo str_replace(ABSPATH, '', $location) . ' - ' . strip_tags($message);
-				echo '<br/>';
-				echo $stack;
-				echo '</li>';
-			}
-			echo '</ol>';
-		}
-		if ( count( self::$notices ) ) {
-			echo '<ol class="debug-bar-php-list">';
-			foreach ( self::$notices as $location_message_stack) {
-				list( $location, $message, $stack) = $location_message_stack;
-				echo '<li class="debug-bar-php-notice">NOTICE: ';
-				echo str_replace(ABSPATH, '', $location) . ' - ' . strip_tags($message);
-				echo '<br/>';
-				echo $stack;
-				echo '</li>';
-			}
-			echo '</ol>';
-		}
-		echo "</div>";
+		echo '<div id="debug-bar-php">';
 
+		$this->render_title ( __( 'Total Warnings:', 'debug-bar' ), count( self::$warnings ) );
+		$this->render_title ( __( 'Total Notices:', 'debug-bar' ), count( self::$notices ) );
+
+		$this->render_list( self::$warnings, __( 'WARNING:', 'debug-bar' ), 'warning' );
+		$this->render_list( self::$notices, __( 'NOTICE:', 'debug-bar' ), 'notice' );
+
+		echo '</div>';
+	}
+
+	function render_title ( $title, $count ) {
+		echo '<h2><span>', $title, '</span>', absint( $count ), "</h2>\n";
+	}
+
+	function render_list( $errors, $line_prefix, $class ) {
+		if ( count( $errors ) ) {
+			echo '<ol class="debug-bar-php-list">';
+			foreach ( $errors as $location_message_stack ) {
+				list( $location, $message, $stack ) = $location_message_stack;
+
+				echo '
+				<li class="debug-bar-php-', $class ,'">', $line_prefix, ' ',
+				str_replace( ABSPATH, '', $location ), ' - ', strip_tags( $message ),
+				'<br/>',
+				$stack,
+				'</li>';
+			}
+			echo '</ol>';
+		}
 	}
 }
-
