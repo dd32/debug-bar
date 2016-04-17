@@ -52,6 +52,13 @@ class Debug_Bar_Deprecated extends Debug_Bar_Panel {
 		return count( self::$deprecated_functions ) + count( self::$deprecated_files ) + count( self::$deprecated_arguments ) + count( self::$deprecated_constructors );
 	}
 
+	function debug_bar_classes( $classes ) {
+		if ( $this->get_total() > 0 ) {
+			$classes[] = 'debug-bar-notice-summary';
+		}
+		return $classes;
+	}
+
 	function render() {
 		echo '<div id="debug-bar-deprecated">';
 

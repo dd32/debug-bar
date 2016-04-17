@@ -36,8 +36,8 @@
 			button = document.getElementById( 'wp-admin-bar-debug-bar' );
 			if ( !button )
 				return; // how did this happen?
-			if ( button.className.indexOf( 'debug-bar-php-warning-summary' ) === -1 )
-				button.className = button.className + ' debug-bar-php-warning-summary';
+			if ( button.className.indexOf( 'debug-bar-warning-summary' ) === -1 )
+				button.className = button.className + ' debug-bar-warning-summary';
 
 			tab = document.getElementById('debug-menu-link-Debug_Bar_JS');
 			if ( tab )

@@ -146,7 +146,7 @@ class Debug_Bar {
 		global $wp_admin_bar;
 
 		$classes = apply_filters( 'debug_bar_classes', array() );
-		$classes = implode( " ", $classes );
+		$classes = implode( " ", array_unique( $classes ) );
 
 		/* Add the main siteadmin menu item */
 		$wp_admin_bar->add_menu( array(
