@@ -147,9 +147,9 @@ class Debug_Bar {
 	function enqueue() {
 		$suffix = defined('SCRIPT_DEBUG') && SCRIPT_DEBUG ? '.dev' : '';
 
-		wp_enqueue_style( 'debug-bar', plugins_url( "css/debug-bar$suffix.css", __FILE__ ), array(), '20120317' );
+		wp_enqueue_style( 'debug-bar', plugins_url( "css/debug-bar$suffix.css", __FILE__ ), array(), '20160430' );
 
-		wp_enqueue_script( 'debug-bar', plugins_url( "js/debug-bar$suffix.js", __FILE__ ), array( 'jquery' ), '20121228.2', true );
+		wp_enqueue_script( 'debug-bar', plugins_url( "js/debug-bar$suffix.js", __FILE__ ), array( 'jquery' ), '20160430', true );
 
 		do_action('debug_bar_enqueue_scripts');
 	}
@@ -265,7 +265,7 @@ class Debug_Bar {
 			$statuses[] = array(
 				'site',
 				php_uname( 'n' ),
-				/* TRANSLATORS: %d is the site id number in a multi-site setting. */
+				/* translators: %d is the site id number in a multi-site setting. */
 				sprintf( __( '#%d', 'debug-bar' ), get_current_blog_id() ),
 			);
 			$statuses[] = array(
@@ -282,7 +282,7 @@ class Debug_Bar {
 			$statuses[] = array(
 				'memory',
 				__( 'Memory Usage', 'debug-bar' ),
-				/* TRANSLATORS: %s is a formatted number representing the memory usage. */
+				/* translators: %s is a formatted number representing the memory usage. */
 				sprintf( __( '%s bytes', 'debug-bar' ), number_format_i18n( $this->safe_memory_get_peak_usage() ) ),
 			);
 
