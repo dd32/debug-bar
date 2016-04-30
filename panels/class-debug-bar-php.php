@@ -61,6 +61,14 @@ class Debug_Bar_PHP extends Debug_Bar_Panel {
 		if ( 0 === error_reporting() ) {
 			self::$silenced[ $_key ] = array( $file . ':' . $line, $message, wp_debug_backtrace_summary( __CLASS__ ) );
 		} else {
+
+			if ( ! defined( 'E_DEPRECATED' ) ) {
+				define( 'E_DEPRECATED', 8192 );
+			}
+			if ( ! defined( 'E_USER_DEPRECATED' ) )	{
+				define( 'E_USER_DEPRECATED', 16384 );
+			}
+
 			switch ( $type ) {
 				case E_WARNING :
 				case E_USER_WARNING :
