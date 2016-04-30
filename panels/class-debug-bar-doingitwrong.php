@@ -26,7 +26,7 @@ class Debug_Bar_Doing_It_Wrong extends Debug_Bar_Deprecated {
 	function render() {
 		echo '<div id="debug-bar-doingitwrong">';
 		$this->render_title( __( 'Total Calls:', 'debug-bar' ), count( self::$doing_it_wrong ) );
-		$this->render_list( self::$doing_it_wrong, 'doingitwrong' );
+		$this->render_list( self::$doing_it_wrong, 'doingitwrong', __( 'DOING IT WRONG:', 'debug-bar' ) );
 		echo '</div>';
 	}
 
