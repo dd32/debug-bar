@@ -28,7 +28,9 @@ class Debug_Bar {
 	}
 
 	function Debug_Bar() {
-		_deprecated_constructor( __METHOD__, '0.8.3', __CLASS__ );
+		if ( function_exists( '_deprecated_constructor' ) ) {
+			_deprecated_constructor( __METHOD__, '0.8.3', __CLASS__ );
+		}
 		self::__construct();
 	}
 
