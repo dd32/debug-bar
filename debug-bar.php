@@ -19,6 +19,7 @@
  */
 
 class Debug_Bar {
+	var $path;
 	var $panels = array();
 
 	function __construct() {
@@ -26,6 +27,13 @@ class Debug_Bar {
 			add_action( 'admin_init', array( $this, 'init_ajax' ) );
 		}
 		add_action( 'admin_bar_init', array( $this, 'init' ) );
+
+		$this->path = plugin_dir_path( __FILE__ );
+
+		$this->early_requirements();
+		Debug_Bar_PHP::start_logging();
+		Debug_Bar_Deprecated::start_logging();
+		Debug_Bar_Doing_It_Wrong::start_logging();
 	}
 
 	function Debug_Bar() {
@@ -35,6 +43,9 @@ class Debug_Bar {
 
 	function init() {
 		if ( ! $this->enable_debug_bar() ) {
+			Debug_Bar_PHP::stop_logging();
+			Debug_Bar_Deprecated::stop_logging();
+			Debug_Bar_Doing_It_Wrong::stop_logging();
 			return;
 		}
 
@@ -86,6 +97,9 @@ class Debug_Bar {
 
 	function init_ajax() {
 		if ( ! $this->enable_debug_bar( true ) ) {
+			Debug_Bar_PHP::stop_logging();
+			Debug_Bar_Deprecated::stop_logging();
+			Debug_Bar_Doing_It_Wrong::stop_logging();
 			return;
 		}
 
@@ -93,12 +107,21 @@ class Debug_Bar {
 		$this->init_panels();
 	}
 
+	function early_requirements() {
+		require_once( $this->path . '/compat.php' );
+		$recs = array( 'panel', 'php', 'deprecated', 'doingitwrong' );
+		$this->include_files( $recs );
+	}
+
 	function requirements() {
-		$path = plugin_dir_path( __FILE__ );
-		require_once( $path . '/compat.php' );
-		$recs = array( 'panel', 'php', 'queries', 'request', 'wp-query', 'object-cache', 'deprecated', 'js' );
-		foreach ( $recs as $rec )
-			require_once "$path/panels/class-debug-bar-$rec.php";
+		$recs = array( 'queries', 'request', 'wp-query', 'object-cache', 'js' );
+		$this->include_files( $recs );
+	}
+
+	function include_files( $recs ) {
+		foreach ( $recs as $rec ) {
+			require_once $this->path . "/panels/class-debug-bar-$rec.php";
+		}
 	}
 
 	function enqueue() {
@@ -117,6 +140,7 @@ class Debug_Bar {
 			'Debug_Bar_Queries',
 			'Debug_Bar_WP_Query',
 			'Debug_Bar_Deprecated',
+			'Debug_Bar_Doing_It_Wrong',
 			'Debug_Bar_Request',
 			'Debug_Bar_Object_Cache',
 			'Debug_Bar_JS',
@@ -152,7 +176,7 @@ class Debug_Bar {
 		global $wp_admin_bar;
 
 		$classes = apply_filters( 'debug_bar_classes', array() );
-		$classes = implode( " ", $classes );
+		$classes = implode( " ", array_unique( $classes ) );
 
 		/* Add the main siteadmin menu item */
 		$wp_admin_bar->add_menu( array(

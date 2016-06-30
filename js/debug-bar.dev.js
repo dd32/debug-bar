@@ -102,4 +102,27 @@ wpDebugBar.Panel = function() {
 
 $(document).ready( wpDebugBar.init );
 
+/**
+ * Add the 'warning' class to the admin bar button for PHP errors encountered after the admin bar
+ * was initialized.
+ */
+$(document ).ready( function() {
+	var hasPHPErrors, hasNotices, button;
+
+	hasPHPErrors = $( '#debug-menu-link-Debug_Bar_PHP span.debug-bar-issue-warnings' );
+	hasNotices   = $( '#debug-menu-links span.debug-bar-issue-count' );
+	button       = $( '#wp-admin-bar-debug-bar' );
+
+	if ( 0 < hasPHPErrors.length ) {
+		if ( button && ! button.hasClass( 'debug-bar-warning-summary' ) ) {
+			button.addClass( 'debug-bar-warning-summary' );
+		}
+	} else if ( 0 < hasNotices.length ) {
+		button = $( '#wp-admin-bar-debug-bar' );
+		if ( button && ! button.hasClass( 'debug-bar-notice-summary' ) ) {
+			button.addClass( 'debug-bar-notice-summary' );
+		}
+	}
+});
+
 })(jQuery);

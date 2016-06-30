@@ -4,7 +4,7 @@ class Debug_Bar_JS extends Debug_Bar_Panel {
 	var $real_error_handler = array();
 
 	function init() {
-		$this->title( __('JavaScript', 'debug-bar') );
+		$this->title( __( 'JavaScript', 'debug-bar' ) . '<span id="debug-bar-js-issue-count">0</span>' );
 
 		// attach here instead of debug_bar_enqueue_scripts
 		// because we want to be as early as possible!
