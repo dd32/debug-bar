@@ -67,10 +67,10 @@ class Debug_Bar_Deprecated extends Debug_Bar_Panel {
 		$this->render_title( __( 'Total Arguments:', 'debug-bar' ), count( self::$deprecated_arguments ) );
 		$this->render_title( __( 'Total Constructors:', 'debug-bar' ), count( self::$deprecated_constructors ) );
 
-		$this->render_list( self::$deprecated_functions, 'deprecated-function', __( 'DEPRECATED FUNCTION:', 'debug-bar' ) );
-		$this->render_list( self::$deprecated_files, 'deprecated-file', __( 'DEPRECATED FILE:', 'debug-bar' ) );
-		$this->render_list( self::$deprecated_arguments, 'deprecated-argument', __( 'DEPRECATED ARGUMENT:', 'debug-bar' ) );
-		$this->render_list( self::$deprecated_constructors, 'deprecated-constructor', __( 'DEPRECATED CONSTRUCTOR:', 'debug-bar' ) );
+		$this->render_list( self::$deprecated_functions, __( 'DEPRECATED FUNCTION:', 'debug-bar' ), 'deprecated-function' );
+		$this->render_list( self::$deprecated_files, __( 'DEPRECATED FILE:', 'debug-bar' ), 'deprecated-file' );
+		$this->render_list( self::$deprecated_arguments, __( 'DEPRECATED ARGUMENT:', 'debug-bar' ), 'deprecated-argument' );
+		$this->render_list( self::$deprecated_constructors, __( 'DEPRECATED CONSTRUCTOR:', 'debug-bar' ), 'deprecated-constructor' );
 
 		echo '</div>';
 	}
@@ -79,7 +79,7 @@ class Debug_Bar_Deprecated extends Debug_Bar_Panel {
 		echo '<h2><span>', $title, '</span>', absint( $count ), "</h2>\n";
 	}
 
-	function render_list( $calls, $class, $type ) {
+	function render_list( $calls, $type, $class ) {
 		if ( count( $calls ) ) {
 			echo '<ol class="debug-bar-deprecated-list">';
 			foreach ( $calls as $location => $message_stack ) {
