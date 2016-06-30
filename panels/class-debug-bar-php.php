@@ -13,6 +13,7 @@ class Debug_Bar_PHP extends Debug_Bar_Panel {
 			return false;
 		}
 
+		error_reporting( -1 );
 		self::$real_error_handler = set_error_handler( array( __CLASS__, 'error_handler' ) );
 	}
 
@@ -56,6 +57,7 @@ class Debug_Bar_PHP extends Debug_Bar_Panel {
 	}
 
 	static function error_handler( $type, $message, $file, $line ) {
+
 		$_key = md5( $file . ':' . $line . ':' . $message );
 
 		if ( 0 === error_reporting() ) {

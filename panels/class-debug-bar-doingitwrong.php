@@ -32,12 +32,12 @@ class Debug_Bar_Doing_It_Wrong extends Debug_Bar_Deprecated {
 
 	static function doing_it_wrong_run( $function, $message, $version ) {
 		$backtrace = debug_backtrace( false );
-		$bt = 4;
+		$bt        = 4;
 		if ( ! isset( $backtrace[4]['file'] ) && 'call_user_func_array' == $backtrace[5]['function'] ) {
 			$bt = 6;
 		}
-		$file = $backtrace[ $bt ]['file'];
-		$line = $backtrace[ $bt ]['line'];
+		$file = ( isset( $backtrace[ $bt ]['file'] ) ? $backtrace[ $bt ]['file'] : 0 );
+		$line = ( isset( $backtrace[ $bt ]['line'] ) ? $backtrace[ $bt ]['line'] : 0 );
 		/* translators: %s: version number. */
 		$version = is_null( $version ) ? '' : sprintf( __( '(This message was added in version %s.)' ), $version );
 		/* translators: %s: Codex URL. */

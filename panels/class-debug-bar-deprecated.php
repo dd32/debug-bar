@@ -98,13 +98,13 @@ class Debug_Bar_Deprecated extends Debug_Bar_Panel {
 
 	static function deprecated_function_run($function, $replacement, $version) {
 		$backtrace = debug_backtrace( false );
-		$bt = 4;
+		$bt        = 4;
 		// Check if we're a hook callback.
 		if ( ! isset( $backtrace[4]['file'] ) && 'call_user_func_array' == $backtrace[5]['function'] ) {
 			$bt = 6;
 		}
-		$file = $backtrace[ $bt ]['file'];
-		$line = $backtrace[ $bt ]['line'];
+		$file = ( isset( $backtrace[ $bt ]['file'] ) ? $backtrace[ $bt ]['file'] : 0 );
+		$line = ( isset( $backtrace[ $bt ]['line'] ) ? $backtrace[ $bt ]['line'] : 0 );
 		if ( ! is_null($replacement) ) {
 			/* translators: %1$s is a function or file name, %2$s a version number, %3$s an alternative function or file to use. */
 			$message = sprintf( __('%1$s is <strong>deprecated</strong> since version %2$s! Use %3$s instead.', 'debug-bar'), $function, $version, $replacement );
@@ -119,9 +119,9 @@ class Debug_Bar_Deprecated extends Debug_Bar_Panel {
 
 	static function deprecated_file_included( $old_file, $replacement, $version, $message ) {
 		$backtrace = debug_backtrace( false );
-		$file = $backtrace[4]['file'];
-		$file_abs = str_replace(ABSPATH, '', $file);
-		$line = $backtrace[4]['line'];
+		$file      = $backtrace[4]['file'];
+		$file_abs  = str_replace(ABSPATH, '', $file);
+		$line      = $backtrace[4]['line'];
 		$message = empty( $message ) ? '' : ' ' . $message;
 		if ( ! is_null( $replacement ) ) {
 			/* translators: %1$s is a function or file name, %2$s a version number, %3$s an alternative function or file to use. */
@@ -146,8 +146,8 @@ class Debug_Bar_Deprecated extends Debug_Bar_Panel {
 		if ( ! isset( $backtrace[4]['file'] ) && 'call_user_func_array' == $backtrace[5]['function'] ) {
 			$bt = 6;
 		}
-		$file = $backtrace[ $bt ]['file'];
-		$line = $backtrace[ $bt ]['line'];
+		$file = ( isset( $backtrace[ $bt ]['file'] ) ? $backtrace[ $bt ]['file'] : 0 );
+		$line = ( isset( $backtrace[ $bt ]['line'] ) ? $backtrace[ $bt ]['line'] : 0 );
 		if ( ! is_null( $message ) ) {
 			$message = sprintf( __('%1$s was called with an argument that is <strong>deprecated</strong> since version %2$s! %3$s'), $function, $version, $message );
 		} else {
@@ -164,8 +164,8 @@ class Debug_Bar_Deprecated extends Debug_Bar_Panel {
 		if ( ! isset( $backtrace[4]['file'] ) && 'call_user_func_array' == $backtrace[5]['function'] ) {
 			$bt = 6;
 		}
-		$file = $backtrace[ $bt ]['file'];
-		$line = $backtrace[ $bt ]['line'];
+		$file = ( isset( $backtrace[ $bt ]['file'] ) ? $backtrace[ $bt ]['file'] : 0 );
+		$line = ( isset( $backtrace[ $bt ]['line'] ) ? $backtrace[ $bt ]['line'] : 0 );
 
 		if ( ! empty( $parent_class ) ) {
 			/* translators: 1: PHP class name, 2: PHP parent class name, 3: version number, 4: __construct() method */
