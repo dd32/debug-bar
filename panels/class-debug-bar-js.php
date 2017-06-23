@@ -11,7 +11,7 @@ class Debug_Bar_JS extends Debug_Bar_Panel {
 		 * because we want to be as early as possible!
 		 */
 		$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '.dev' : '';
-		wp_enqueue_script( 'debug-bar-js', plugins_url( "js/debug-bar-js$suffix.js", dirname( __FILE__ ) ), array( 'jquery' ), '20111216' );
+		wp_enqueue_script( 'debug-bar-js', plugins_url( "js/debug-bar-js$suffix.js", dirname( __FILE__ ) ), array( 'jquery' ), '20170515' );
 	}
 
 	function render() {

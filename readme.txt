@@ -32,6 +32,7 @@ There are numerous other add-ons available to get more insight into, for instanc
 = 0.9 =
 Added panel navigation to toolbar.
 Improved localization support.
+Lots of bug fixes.
 Security fixes.
 
 = 0.8.4 =
@@ -95,9 +96,22 @@ Initial Release
 == Changelog ==
 
 = 0.9 =
-Added panel navigation to toolbar.
-Improved localization support.
-Security fixes.
+* [Enhancement] Added panel navigation to toolbar.
+* [Enhancement] Introduced a `debug_bar_enable` filter which allows for selectively giving access to the debug bar for additional users, such as site-admins in a multi-site environment.
+* [Enhancement] Improved readability of the WP Query - Queried object information.
+* [Enhancement] Allow for large(r) number of add-ons in the panel menu.
+* [Enhancement] The Debug bar plugin is now fully translatable. If you'd like to translate the plugin to your own language, head on over to [GlotPress](https://translate.wordpress.org/projects/wp-plugins/debug-bar).
+* [Bugfix] Security fixes.
+* [Bugfix] Added the missing message text for deprecated arguments.
+* [Bugfix] Fixed the classification of the various deprecated notices - previously all would be seen as functions.
+* [Bugfix] Prevent things looking weird when the current locale is RTL based.
+* [Bugfix] Diminish bleed through of front-end CSS styling.
+* [Bugfix] Add missing `jquery` dependency when loading scripts.
+* [Bugfix] Fix some error notices for PHP 5.2.
+* [Bugfix] Fix an HTML error (incorrect nesting).
+* Improved help information in the readme.
+* Minor refactoring.
+* Minimum WP version is now WP 3.4.
 
 = 0.8.4 =
 Updated to avoid incompatibilities with some extensions.
