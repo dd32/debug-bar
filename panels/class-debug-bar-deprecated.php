@@ -129,9 +129,11 @@ class Debug_Bar_Deprecated extends Debug_Bar_Panel {
 		$location = $backtrace[ $bt ]['file'] . ':' . $backtrace[ $bt ]['line'];
 
 		if ( ! is_null( $message ) ) {
-			$message = sprintf( __( '%1$s was called with an argument that is <strong>deprecated</strong> since version %2$s! %3$s' ), $function, $version, $message );
+			/* translators: %1$s is a function name, %2$s a version number, %3$s a message regarding the change. */
+			$message = sprintf( __( '%1$s was called with an argument that is <strong>deprecated</strong> since version %2$s! %3$s', 'debug-bar' ), $function, $version, $message );
 		} else {
-			$message = sprintf( __( '%1$s was called with an argument that is <strong>deprecated</strong> since version %2$s with no alternative available.' ), $function, $version );
+			/* translators: %1$s is a function name, %2$s a version number. */
+			$message = sprintf( __( '%1$s was called with an argument that is <strong>deprecated</strong> since version %2$s with no alternative available.', 'debug-bar' ), $function, $version );
 		}
 
 		$this->deprecated_arguments[ $location ] = array( $message, wp_debug_backtrace_summary( null, $bt ) );
