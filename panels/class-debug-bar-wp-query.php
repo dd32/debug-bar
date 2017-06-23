@@ -18,7 +18,7 @@ class Debug_Bar_WP_Query extends Debug_Bar_Panel {
 		}
 
 		echo "<div id='debug-bar-wp-query'>";
-		echo '<h2><span>', __( 'Queried Object ID:', 'debug-bar' ), '</span>', get_queried_object_id(), "</h2>\n";
+		echo '<h2><span>', __( 'Queried Object ID:', 'debug-bar' ), '</span>', (int) get_queried_object_id(), "</h2>\n";
 
 		// Determine the query type. Follows the template loader order.
 		$type = '';
@@ -102,11 +102,11 @@ class Debug_Bar_WP_Query extends Debug_Bar_Panel {
 	protected function _recursive_print_kv( $kv_array ) {
 		foreach ( $kv_array as $key => $value ) {
 			if ( is_object( $value ) || is_array( $value ) ) {
-				echo '<tr><th>', $key, '</th> <td>&rArr;</td> <td>';
+				echo '<tr><th>', esc_html( $key ), '</th> <td>&rArr;</td> <td>';
 				$this->_recursive_print_kv( $value );
 				echo '</td></tr>';
 			} else {
-				echo '<tr><th>', $key, '</th> <td>&rArr;</td> <td>', $value, '</td></tr>';
+				echo '<tr><th>', esc_html( $key ), '</th> <td>&rArr;</td> <td>', esc_html( $value ), '</td></tr>';
 			}
 		}
 	}
