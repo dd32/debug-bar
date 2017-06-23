@@ -2,7 +2,7 @@
 Contributors: wordpressdotorg, ryan, westi, koopersmith, duck_, mitchoyoshitaka, dd32, jrf, obenland
 Tags: debug
 Tested up to: 4.8
-Stable tag: 0.9
+Stable tag: 0.9.1
 Requires at least: 3.4
 
 Adds a debug menu to the admin bar that shows query, cache, and other helpful debugging information.
@@ -28,6 +28,9 @@ Add a PHP/MySQL console with the [Debug Bar Console plugin](https://wordpress.or
 There are numerous other add-ons available to get more insight into, for instance, the registered Post Types, Shortcodes, WP Cron, Language file loading, Actions and Filters and so on. Just [search the plugin directory for 'Debug Bar'](https://wordpress.org/plugins/search/debug+bar/).
 
 == Upgrade Notice ==
+
+= 0.9.1 =
+Minor fixes.
 
 = 0.9 =
 Added panel navigation to toolbar.
@@ -94,6 +97,12 @@ Added deprecated function usage tracking
 Initial Release
 
 == Changelog ==
+
+= 0.9.1 =
+* Escape HTML in the queried object tabel in the WP Query Panel.
+* Prevent a potential issue with a cached version of a changed js script being served.
+* Prevent potential fatal error when the plugin is used in conjunction with WP < 4.3.
+* Various cleaning up.
 
 = 0.9 =
 * [Enhancement] Added panel navigation to toolbar.
