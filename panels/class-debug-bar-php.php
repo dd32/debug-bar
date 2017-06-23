@@ -68,7 +68,7 @@ class Debug_Bar_PHP extends Debug_Bar_Panel {
 				break;
 		}
 
-		if ( null != $this->real_error_handler ) {
+		if ( null !== $this->real_error_handler ) {
 			return call_user_func( $this->real_error_handler, $type, $message, $file, $line );
 		} else {
 			return false;
@@ -76,7 +76,7 @@ class Debug_Bar_PHP extends Debug_Bar_Panel {
 	}
 
 	function render() {
-		echo "<div id='debug-bar-php'>";
+		echo '<div id="debug-bar-php">';
 		echo '<h2><span>', __( 'Total Warnings:', 'debug-bar' ), '</span>', number_format_i18n( count( $this->warnings ) ), "</h2>\n";
 		echo '<h2><span>', __( 'Total Notices:', 'debug-bar' ), '</span>', number_format_i18n( count( $this->notices ) ), "</h2>\n";
 
@@ -106,6 +106,6 @@ class Debug_Bar_PHP extends Debug_Bar_Panel {
 			echo '</ol>';
 		}
 
-		echo "</div>";
+		echo '</div>';
 	}
 }

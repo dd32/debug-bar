@@ -62,7 +62,7 @@ class Debug_Bar {
 	 * @return bool
 	 */
 	function is_wp_login() {
-		return 'wp-login.php' == basename( $_SERVER['SCRIPT_NAME'] );
+		return 'wp-login.php' === basename( $_SERVER['SCRIPT_NAME'] );
 	}
 
 	/**
@@ -138,7 +138,8 @@ class Debug_Bar {
 		$this->panels = apply_filters( 'debug_bar_panels', $this->panels );
 	}
 
-	function ensure_ajaxurl() { ?>
+	function ensure_ajaxurl() {
+		?>
 		<script type="text/javascript">
 			//<![CDATA[
 			var ajaxurl = '<?php echo admin_url( 'admin-ajax.php' ); ?>';
@@ -156,14 +157,16 @@ class Debug_Bar {
 		global $wp_admin_bar;
 
 		$classes = apply_filters( 'debug_bar_classes', array() );
-		$classes = implode( " ", $classes );
+		$classes = implode( ' ', $classes );
 
 		/* Add the main siteadmin menu item */
 		$wp_admin_bar->add_menu( array(
 			'id'     => 'debug-bar',
 			'parent' => 'top-secondary',
 			'title'  => apply_filters( 'debug_bar_title', __( 'Debug', 'debug-bar' ) ),
-			'meta'   => array( 'class' => $classes ),
+			'meta'   => array(
+				'class' => $classes,
+			),
 		) );
 
 		foreach ( $this->panels as $panel_key => $panel ) {
@@ -229,7 +232,8 @@ class Debug_Bar {
 
 			<div id='debug-bar-info'>
 				<div id="debug-status">
-					<?php //@todo: Add a links to information about WP_DEBUG, PHP version, MySQL version, and Peak Memory.
+					<?php
+					//@todo: Add a links to information about WP_DEBUG, PHP version, MySQL version, and Peak Memory.
 					$statuses   = array();
 					$statuses[] = array(
 						'site',
@@ -265,16 +269,20 @@ class Debug_Bar {
 
 					$statuses = apply_filters( 'debug_bar_statuses', $statuses );
 
-					foreach ( $statuses as $status ):
+					foreach ( $statuses as $status ) :
 						list( $slug, $title, $data ) = $status;
-
 						?>
 						<div id='debug-status-<?php echo esc_attr( $slug ); ?>' class='debug-status'>
 						<div class='debug-status-title'><?php echo $title; ?></div>
-						<?php if ( ! empty( $data ) ): ?>
+						<?php
+						if ( ! empty( $data ) ) :
+						?>
 						<div class='debug-status-data'><?php echo $data; ?></div>
-					<?php endif; ?>
-						</div><?php
+						<?php
+						endif;
+						?>
+						</div>
+						<?php
 					endforeach;
 					?>
 				</div>
@@ -299,18 +307,21 @@ class Debug_Bar {
 							</a></li>
 						<?php
 						$current = '';
-					endforeach; ?>
-
+					endforeach;
+					?>
 				</ul>
 			</div>
 
-			<div id="debug-menu-targets"><?php
+			<div id="debug-menu-targets">
+				<?php
 				$current = ' style="display: block"';
 				foreach ( $this->panels as $panel ) :
-					$class = get_class( $panel ); ?>
-
+					$class = get_class( $panel );
+					?>
 					<div id="debug-menu-target-<?php echo $class; ?>" class="debug-menu-target" <?php echo $current; ?>>
-						<?php $panel->render(); ?>
+						<?php
+						$panel->render();
+						?>
 					</div>
 
 					<?php

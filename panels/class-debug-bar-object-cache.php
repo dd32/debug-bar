@@ -14,9 +14,9 @@ class Debug_Bar_Object_Cache extends Debug_Bar_Panel {
 		global $wp_object_cache;
 
 		ob_start();
-		echo "<div id='object-cache-stats'>";
+		echo '<div id="object-cache-stats">';
 		$wp_object_cache->stats();
-		echo "</div>";
+		echo '</div>';
 		$out = ob_get_contents();
 		ob_end_clean();
 

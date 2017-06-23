@@ -29,7 +29,7 @@ class Debug_Bar_Queries extends Debug_Bar_Panel {
 
 			if ( $wpdb->num_queries > 500 && ! $show_many ) {
 				/* translators: %s = a url. */
-				$out .= "<p>" . sprintf( __( 'There are too many queries to show easily! <a href="%s">Show them anyway</a>', 'debug-bar' ), esc_url( add_query_arg( 'debug_queries', 'true' ) ) ) . "</p>";
+				$out .= '<p>' . sprintf( __( 'There are too many queries to show easily! <a href="%s">Show them anyway</a>', 'debug-bar' ), esc_url( add_query_arg( 'debug_queries', 'true' ) ) ) . '</p>';
 			}
 
 			$out .= '<ol class="wpd-queries">';
@@ -57,10 +57,10 @@ class Debug_Bar_Queries extends Debug_Bar_Panel {
 				$out .= "<li>$query<br/><div class='qdebug'>$debug <span>#$counter ($time)</span></div></li>\n";
 			}
 			$out .= '</ol>';
-		} else if ( 0 === $wpdb->num_queries ) {
-			$out .= "<p><strong>" . __( 'There are no queries on this page.', 'debug-bar' ) . "</strong></p>";
+		} elseif ( 0 === $wpdb->num_queries ) {
+			$out .= '<p><strong>' . __( 'There are no queries on this page.', 'debug-bar' ) . '</strong></p>';
 		} else {
-			$out .= "<p><strong>" . __( 'SAVEQUERIES must be defined to show the query log.', 'debug-bar' ) . "</strong></p>";
+			$out .= '<p><strong>' . __( 'SAVEQUERIES must be defined to show the query log.', 'debug-bar' ) . '</strong></p>';
 		}
 
 		if ( ! empty( $EZSQL_ERROR ) ) {

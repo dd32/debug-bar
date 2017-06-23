@@ -17,7 +17,7 @@ class Debug_Bar_WP_Query extends Debug_Bar_Panel {
 			$post_type_object = get_post_type_object( $queried_object->post_type );
 		}
 
-		echo "<div id='debug-bar-wp-query'>";
+		echo '<div id="debug-bar-wp-query">';
 		echo '<h2><span>', __( 'Queried Object ID:', 'debug-bar' ), '</span>', (int) get_queried_object_id(), "</h2>\n";
 
 		// Determine the query type. Follows the template loader order.
@@ -65,7 +65,7 @@ class Debug_Bar_WP_Query extends Debug_Bar_Panel {
 		$page_for_posts = get_option( 'page_for_posts' );
 
 		echo '<h2><span>', __( 'Show on Front:', 'debug-bar' ), '</span>', $show_on_front, "</h2>\n";
-		if ( 'page' == $show_on_front ) {
+		if ( 'page' === $show_on_front ) {
 			echo '<h2><span>', __( 'Page for Posts:', 'debug-bar' ), '</span>', $page_for_posts, "</h2>\n";
 			echo '<h2><span>', __( 'Page on Front:', 'debug-bar' ), '</span>', $page_on_front, "</h2>\n";
 		}

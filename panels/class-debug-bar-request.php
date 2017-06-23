@@ -2,7 +2,7 @@
 
 class Debug_Bar_Request extends Debug_Bar_Panel {
 	function init() {
-		$this->title( __('Request', 'debug-bar') );
+		$this->title( __( 'Request', 'debug-bar' ) );
 	}
 
 	function prerender() {
@@ -12,7 +12,7 @@ class Debug_Bar_Request extends Debug_Bar_Panel {
 	function render() {
 		global $wp;
 
-		echo "<div id='debug-bar-request'>";
+		echo '<div id="debug-bar-request">';
 
 		if ( empty( $wp->request ) ) {
 			$request = __( 'None', 'debug-bar' );

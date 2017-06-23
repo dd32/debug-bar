@@ -29,7 +29,7 @@ class Debug_Bar_Deprecated extends Debug_Bar_Panel {
 	}
 
 	function render() {
-		echo "<div id='debug-bar-deprecated'>";
+		echo '<div id="debug-bar-deprecated">';
 		echo '<h2><span>', __( 'Total Functions:', 'debug-bar' ), '</span>', number_format_i18n( count( $this->deprecated_functions ) ), "</h2>\n";
 		echo '<h2><span>', __( 'Total Arguments:', 'debug-bar' ), '</span>', number_format_i18n( count( $this->deprecated_arguments ) ), "</h2>\n";
 		echo '<h2><span>', __( 'Total Files:', 'debug-bar' ), '</span>', number_format_i18n( count( $this->deprecated_files ) ), "</h2>\n";
@@ -37,11 +37,11 @@ class Debug_Bar_Deprecated extends Debug_Bar_Panel {
 			echo '<ol class="debug-bar-deprecated-list">';
 			foreach ( $this->deprecated_functions as $location => $message_stack ) {
 				list( $message, $stack ) = $message_stack;
-				echo "<li class='debug-bar-deprecated-function'>";
+				echo '<li class="debug-bar-deprecated-function">';
 				echo str_replace( ABSPATH, '', $location ) . ' - ' . strip_tags( $message );
-				echo "<br/>";
+				echo '<br/>';
 				echo $stack;
-				echo "</li>";
+				echo '</li>';
 			}
 			echo '</ol>';
 		}
@@ -49,11 +49,11 @@ class Debug_Bar_Deprecated extends Debug_Bar_Panel {
 			echo '<ol class="debug-bar-deprecated-list">';
 			foreach ( $this->deprecated_files as $location => $message_stack ) {
 				list( $message, $stack ) = $message_stack;
-				echo "<li class='debug-bar-deprecated-file'>";
+				echo '<li class="debug-bar-deprecated-file">';
 				echo str_replace( ABSPATH, '', $location ) . ' - ' . strip_tags( $message );
-				echo "<br/>";
+				echo '<br/>';
 				echo $stack;
-				echo "</li>";
+				echo '</li>';
 			}
 			echo '</ol>';
 		}
@@ -61,15 +61,15 @@ class Debug_Bar_Deprecated extends Debug_Bar_Panel {
 			echo '<ol class="debug-bar-deprecated-list">';
 			foreach ( $this->deprecated_arguments as $location => $message_stack ) {
 				list( $message, $stack ) = $message_stack;
-				echo "<li class='debug-bar-deprecated-argument'>";
+				echo '<li class="debug-bar-deprecated-argument">';
 				echo str_replace( ABSPATH, '', $location ) . ' - ' . strip_tags( $message );
-				echo "<br/>";
+				echo '<br/>';
 				echo $stack;
-				echo "</li>";
+				echo '</li>';
 			}
 			echo '</ol>';
 		}
-		echo "</div>";
+		echo '</div>';
 	}
 
 	function deprecated_function_run( $function, $replacement, $version ) {
@@ -77,7 +77,7 @@ class Debug_Bar_Deprecated extends Debug_Bar_Panel {
 		$bt        = 4;
 
 		// Check if we're a hook callback.
-		if ( ! isset( $backtrace[4]['file'] ) && 'call_user_func_array' == $backtrace[5]['function'] ) {
+		if ( ! isset( $backtrace[4]['file'] ) && 'call_user_func_array' === $backtrace[5]['function'] ) {
 			$bt = 6;
 		}
 
@@ -122,7 +122,7 @@ class Debug_Bar_Deprecated extends Debug_Bar_Panel {
 		}
 
 		$bt = 4;
-		if ( ! isset( $backtrace[4]['file'] ) && 'call_user_func_array' == $backtrace[5]['function'] ) {
+		if ( ! isset( $backtrace[4]['file'] ) && 'call_user_func_array' === $backtrace[5]['function'] ) {
 			$bt = 6;
 		}
 
