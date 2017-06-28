@@ -4,11 +4,13 @@ var wpDebugBar;
 	var api;
 
 	wpDebugBar = api = {
+
 		// The element that we will pad to prevent the debug bar
 		// from overlapping the bottom of the page.
 		body: undefined,
 
 		init: function init() {
+
 			// If we're not in the admin, pad the body.
 			api.body = $( document.body );
 
@@ -24,11 +26,12 @@ var wpDebugBar;
 		toggle: {
 			init: function init() {
 				$( '#wp-admin-bar-debug-bar' ).click( function onClickAdminBarMenu( event ) {
+					var $menuLink;
 					event.preventDefault();
 
 					// Click on submenu item.
 					if ( event.target.hash ) {
-						var $menuLink = $( event.target.rel );
+						$menuLink = $( event.target.rel );
 
 						// Open/close debug bar.
 						if ( ! api.isVisible() ) {
@@ -52,7 +55,7 @@ var wpDebugBar;
 				} );
 			},
 			visibility: function visibility( show ) {
-				show = typeof show == 'undefined' ? ! api.isVisible() : show;
+				show = ( 'undefined' === typeof show ) ? ! api.isVisible() : show;
 
 				// Show/hide the debug bar.
 				api.body.toggleClass( 'debug-bar-visible', show );
@@ -81,6 +84,7 @@ var wpDebugBar;
 
 				// Select the current tab and show the current panel.
 				$this.addClass( 'current' );
+
 				// The hashed component of the href is the id that we want to display.
 				$( '#' + this.href.substr( this.href.indexOf( '#' ) + 1 ) ).show().trigger( 'debug-bar-show' );
 			} );
@@ -94,7 +98,7 @@ var wpDebugBar;
 				$( document ).keydown( function maybeClosePanel( event ) {
 					var key = event.key || event.which || event.keyCode;
 
-					if ( 27 /* esc */ === key && api.isVisible() ) {
+					if ( 27 /* ASCII esc */ === key && api.isVisible() ) {
 						event.preventDefault();
 						api.actions.close();
 					}
