@@ -3,7 +3,7 @@
 		rawCount = 0,
 		errors = [];
 
-	window.onerror = function ( errorMsg, url, lineNumber ) {
+	window.onerror = function( errorMsg, url, lineNumber ) {
 		if ( ! document.getElementById( 'debug-bar-js-error-count' ) ) {
 			errors[ errors.length ] = [ errorMsg, url, lineNumber ];
 		} else {
@@ -11,7 +11,8 @@
 		}
 	};
 
-	jQuery( function () {
+	jQuery( function() {
+		var err;
 		for ( err in errors ) {
 			dbjsError( errors[ err ][0], errors[ err ][1], errors[ err ][2] );
 		}
@@ -30,14 +31,14 @@
 		}
 
 		if ( ! count || ! list ) {
-			return; // threw way too early... @todo cache these?
+			return; // Threw way too early... @todo cache these?
 		}
 
-		if ( 1 == rawCount ) {
+		if ( 1 === rawCount ) {
 			button = document.getElementById( 'wp-admin-bar-debug-bar' );
 
 			if ( ! button ) {
-				return; // how did this happen?
+				return; // How did this happen?
 			}
 
 			if ( -1 === button.className.indexOf( 'debug-bar-php-warning-summary' ) ) {
