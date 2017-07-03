@@ -26,6 +26,15 @@ class Debug_Bar {
 	 */
 	const VERSION = '0.9.1-alpha';
 
+	/**
+	 * Path to the directory for this plugin.
+	 *
+	 * @since 0.10.0
+	 *
+	 * @var string
+	 */
+	public $path;
+
 	public $panels = array();
 
 	function __construct() {
@@ -33,6 +42,12 @@ class Debug_Bar {
 			add_action( 'admin_init', array( $this, 'init_ajax' ) );
 		}
 		add_action( 'admin_bar_init', array( $this, 'init' ) );
+
+		$this->path = plugin_dir_path( __FILE__ );
+
+		$this->early_requirements();
+		Debug_Bar_PHP::start_logging();
+		Debug_Bar_Deprecated::start_logging();
 	}
 
 	function Debug_Bar() {
@@ -44,6 +59,8 @@ class Debug_Bar {
 
 	function init() {
 		if ( ! $this->enable_debug_bar() ) {
+			Debug_Bar_PHP::stop_logging();
+			Debug_Bar_Deprecated::stop_logging();
 			return;
 		}
 
@@ -102,6 +119,8 @@ class Debug_Bar {
 
 	function init_ajax() {
 		if ( ! $this->enable_debug_bar( true ) ) {
+			Debug_Bar_PHP::stop_logging();
+			Debug_Bar_Deprecated::stop_logging();
 			return;
 		}
 
@@ -109,12 +128,36 @@ class Debug_Bar {
 		$this->init_panels();
 	}
 
-	function requirements() {
-		$path = plugin_dir_path( __FILE__ );
-		$recs = array( 'panel', 'php', 'queries', 'request', 'wp-query', 'object-cache', 'deprecated', 'js' );
+	/**
+	 * Include a number of files early to allow for error logging to start.
+	 *
+	 * @since 0.10.0
+	 */
+	protected function early_requirements() {
+		$recs = array( 'panel', 'php', 'deprecated' );
+		$this->include_files( $recs );
+	}
 
+	/**
+	 * Include the rest of the files.
+	 *
+	 * @since 0.10.0
+	 */
+	protected function requirements() {
+		$recs = array( 'queries', 'request', 'wp-query', 'object-cache', 'js' );
+		$this->include_files( $recs );
+	}
+
+	/**
+	 * Include plugin files.
+	 *
+	 * @since 0.10.0
+	 *
+	 * @param array $recs List of partial file names of the files to include.
+	 */
+	private function include_files( $recs ) {
 		foreach ( $recs as $rec ) {
-			require_once "$path/panels/class-debug-bar-$rec.php";
+			require_once $this->path . "/panels/class-debug-bar-$rec.php";
 		}
 	}
 
