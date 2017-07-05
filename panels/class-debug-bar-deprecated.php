@@ -74,6 +74,8 @@ class Debug_Bar_Deprecated extends Debug_Bar_Panel {
 
 		$key = md5( $location . ':' . $message );
 		$this->deprecated_functions[ $key ] = array( $location, $message, wp_debug_backtrace_summary( null, $bt ) );
+
+		error_log( 'Deprecation Notice: ' . strip_tags( $message ) . '  in ' . $location );
 	}
 
 	function deprecated_file_included( $old_file, $replacement, $version, $message ) {
@@ -93,6 +95,8 @@ class Debug_Bar_Deprecated extends Debug_Bar_Panel {
 
 		$key = md5( $location . ':' . $message );
 		$this->deprecated_files[ $key ] = array( $location, $message, wp_debug_backtrace_summary( null, 4 ) );
+
+		error_log( 'Deprecation Notice: ' . strip_tags( $message ) . '  in ' . $location );
 	}
 
 	function deprecated_argument_run( $function, $message, $version ) {
@@ -120,5 +124,7 @@ class Debug_Bar_Deprecated extends Debug_Bar_Panel {
 		}
 
 		$this->deprecated_arguments[ $key ] = array( $location, $message, wp_debug_backtrace_summary( null, $bt ) );
+
+		error_log( 'Deprecation Notice: ' . strip_tags( $message ) . '  in ' . $location );
 	}
 }
