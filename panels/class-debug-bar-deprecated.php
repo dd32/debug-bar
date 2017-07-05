@@ -30,9 +30,10 @@ class Debug_Bar_Deprecated extends Debug_Bar_Panel {
 
 	function render() {
 		echo '<div id="debug-bar-deprecated">';
-		echo '<h2><span>', __( 'Total Functions:', 'debug-bar' ), '</span>', number_format_i18n( count( $this->deprecated_functions ) ), "</h2>\n";
-		echo '<h2><span>', __( 'Total Arguments:', 'debug-bar' ), '</span>', number_format_i18n( count( $this->deprecated_arguments ) ), "</h2>\n";
-		echo '<h2><span>', __( 'Total Files:', 'debug-bar' ), '</span>', number_format_i18n( count( $this->deprecated_files ) ), "</h2>\n";
+
+		$this->render_panel_info_block( __( 'Total Functions:', 'debug-bar' ), count( $this->deprecated_functions ) );
+		$this->render_panel_info_block( __( 'Total Arguments:', 'debug-bar' ), count( $this->deprecated_arguments ) );
+		$this->render_panel_info_block( __( 'Total Files:', 'debug-bar' ), count( $this->deprecated_files ) );
 
 		$this->render_error_list(
 			$this->deprecated_functions,

@@ -62,6 +62,44 @@ class Debug_Bar_Panel {
 	}
 
 	/**
+	 * Render a (floating) block with a title and content.
+	 *
+	 * Generally these blocks are used at the top of a panel for a quick info overview.
+	 *
+	 * {@internal The list of allowed HTML tags is based on the most common HTML tags used
+	 *            by this plugin and its add-ons.}}
+	 *
+	 * @since 0.10.0
+	 *
+	 * @param string $title   The title of the block.
+	 * @param mixed  $content The value/other content for the block.
+	 *
+	 * @return string|void
+	 */
+	protected function render_panel_info_block( $title, $content ) {
+		if ( is_numeric( $content ) ) {
+			$escaped_content = number_format_i18n( $content );
+		} else {
+			$escaped_content = wp_kses(
+				$content,
+				array(
+					'br'    => array(),
+					'small' => array(
+						'id'    => true,
+						'class' => true,
+					),
+					'span'  => array(
+						'id'    => true,
+						'class' => true,
+					),
+				)
+			);
+		}
+
+		echo '<h2><span>' . esc_html( $title ) . '</span>' . $escaped_content . "</h2>\n"; // WPCS: XSS ok.
+	}
+
+	/**
 	 * Render a list of logged error notices.
 	 *
 	 * Used by the Debug_Bar_PHP panel and the Debug_Bar_Deprecated panel to

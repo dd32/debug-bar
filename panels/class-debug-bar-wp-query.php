@@ -18,7 +18,7 @@ class Debug_Bar_WP_Query extends Debug_Bar_Panel {
 		}
 
 		echo '<div id="debug-bar-wp-query">';
-		echo '<h2><span>', __( 'Queried Object ID:', 'debug-bar' ), '</span>', (int) get_queried_object_id(), "</h2>\n";
+		$this->render_panel_info_block( __( 'Queried Object ID:', 'debug-bar' ), (int) get_queried_object_id() );
 
 		// Determine the query type. Follows the template loader order.
 		$type = '';
@@ -53,25 +53,26 @@ class Debug_Bar_WP_Query extends Debug_Bar_Panel {
 		}
 
 		if ( ! empty( $type ) ) {
-			echo '<h2><span>', __( 'Query Type:', 'debug-bar' ), '</span>', $type, "</h2>\n";
+			$this->render_panel_info_block( __( 'Query Type:', 'debug-bar' ), $type );
 		}
 
 		if ( ! empty( $template ) ) {
-			echo '<h2><span>', __( 'Query Template:', 'debug-bar' ), '</span>', basename( $template ), "</h2>\n";
+			$this->render_panel_info_block( __( 'Query Template:', 'debug-bar' ), basename( $template ) );
 		}
 
 		$show_on_front  = get_option( 'show_on_front' );
 		$page_on_front  = get_option( 'page_on_front' );
 		$page_for_posts = get_option( 'page_for_posts' );
 
-		echo '<h2><span>', __( 'Show on Front:', 'debug-bar' ), '</span>', $show_on_front, "</h2>\n";
+		$this->render_panel_info_block( __( 'Show on Front:', 'debug-bar' ), $show_on_front );
+
 		if ( 'page' === $show_on_front ) {
-			echo '<h2><span>', __( 'Page for Posts:', 'debug-bar' ), '</span>', $page_for_posts, "</h2>\n";
-			echo '<h2><span>', __( 'Page on Front:', 'debug-bar' ), '</span>', $page_on_front, "</h2>\n";
+			$this->render_panel_info_block( __( 'Page for Posts:', 'debug-bar' ), $page_for_posts );
+			$this->render_panel_info_block( __( 'Page on Front:', 'debug-bar' ), $page_on_front );
 		}
 
 		if ( isset( $post_type_object ) ) {
-			echo '<h2><span>', __( 'Post Type:', 'debug-bar' ), '</span>', $post_type_object->labels->singular_name, "</h2>\n";
+			$this->render_panel_info_block( __( 'Post Type:', 'debug-bar' ), $post_type_object->labels->singular_name );
 		}
 
 		echo '<div class="clear"></div>';

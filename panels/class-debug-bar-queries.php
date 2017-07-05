@@ -75,19 +75,18 @@ class Debug_Bar_Queries extends Debug_Bar_Panel {
 			$out .= '</ol>';
 		}
 
-		$heading = '';
 		if ( $wpdb->num_queries ) {
-			$heading .= '<h2><span>' . __( 'Total Queries:', 'debug-bar' ) . '</span>' . number_format_i18n( $wpdb->num_queries ) . "</h2>\n";
+			$this->render_panel_info_block( __( 'Total Queries:', 'debug-bar' ), number_format_i18n( $wpdb->num_queries ) );
 		}
 		if ( $total_time ) {
-			$heading .= '<h2><span>' . __( 'Total query time:', 'debug-bar' ) . '</span>';
 			/* translators: %0.1f = duration in microseconds. */
-			$heading .= sprintf( __( '%0.1f ms', 'debug-bar' ), number_format_i18n( ( $total_time * 1000 ), 1 ) ) . "</h2>\n";
+			$duration = sprintf( __( '%0.1f ms', 'debug-bar' ), number_format_i18n( ( $total_time * 1000 ), 1 ) );
+			$this->render_panel_info_block( __( 'Total query time:', 'debug-bar' ), $duration );
 		}
 		if ( ! empty( $EZSQL_ERROR ) ) {
-			$heading .= '<h2><span>' . __( 'Total DB Errors:', 'debug-bar' ) . '</span>' . number_format_i18n( count( $EZSQL_ERROR ) ) . "</h2>\n";
+			$this->render_panel_info_block( __( 'Total DB Errors:', 'debug-bar' ), count( $EZSQL_ERROR ) );
 		}
 
-		echo $heading . $out;
+		echo $out;
 	}
 }
