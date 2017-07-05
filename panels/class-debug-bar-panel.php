@@ -60,4 +60,38 @@ class Debug_Bar_Panel {
 	function debug_bar_classes( $classes ) {
 		return $classes;
 	}
+
+	/**
+	 * Render a list of logged error notices.
+	 *
+	 * Used by the Debug_Bar_PHP panel and the Debug_Bar_Deprecated panel to
+	 * display lists of PHP Warnings, PHP Notices and WP Deprecated calls.
+	 *
+	 * @since 0.10.0
+	 *
+	 * @param array  $errors      Array of recorded errors/notices/calls.
+	 * @param string $line_prefix Text string to prefix the recorded message with.
+	 * @param string $class       CSS class suffix for the list item.
+	 */
+	protected function render_error_list( $errors, $line_prefix, $class ) {
+		if ( count( $errors ) ) {
+			echo '
+			<ol class="debug-bar-error-notices-list">';
+
+			foreach ( $errors as $location_message_stack ) {
+				list( $location, $message, $stack ) = $location_message_stack;
+
+				echo '
+				<li class="debug-bar-', esc_attr( $class ), '">
+					<strong>', esc_html( $line_prefix ), '</strong> ',
+					esc_html( str_replace( ABSPATH, '', $location ) ), ' - ',
+					esc_html( wp_strip_all_tags( $message ) ),
+					'<br/>', esc_html( $stack ), '
+				</li>';
+			}
+
+			echo '
+			</ol>';
+		}
+	}
 }
