@@ -140,7 +140,7 @@ class Debug_Bar {
 		);
 
 		foreach ( $classes as $class ) {
-			$this->panels[] = new $class;
+			$this->panels[] = new $class();
 		}
 
 		$this->panels = apply_filters( 'debug_bar_panels', $this->panels );
