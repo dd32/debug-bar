@@ -156,11 +156,6 @@ class Debug_Bar {
 		<?php
 	}
 
-	// memory_get_peak_usage is PHP >= 5.2.0 only
-	function safe_memory_get_peak_usage() {
-		return function_exists( 'memory_get_peak_usage' ) ? memory_get_peak_usage() : memory_get_usage();
-	}
-
 	function admin_bar_menu() {
 		global $wp_admin_bar;
 
@@ -264,7 +259,7 @@ class Debug_Bar {
 						'memory',
 						__( 'Memory Usage', 'debug-bar' ),
 						/* translators: %s is a formatted number representing the memory usage. */
-						sprintf( __( '%s bytes', 'debug-bar' ), number_format_i18n( $this->safe_memory_get_peak_usage() ) ),
+						sprintf( __( '%s bytes', 'debug-bar' ), number_format_i18n( memory_get_peak_usage() ) ),
 					);
 
 					if ( ! WP_DEBUG ) {
