@@ -328,14 +328,14 @@ body.debug-bar-maximized.debug-bar-visible {
 }
 
 /* Error notices lists Used by PHP and Deprecated panels. */
-ol.debug-bar-error-notices-list {
+.debug-bar-error-notices-list {
 	padding: 0 !important;
 	margin: 0 !important;
 	list-style: none;
 	clear: left;
 }
 
-ol.debug-bar-error-notices-list li {
+.debug-bar-error-notices-list li {
 	padding: 10px;
 	margin: 0 0 10px 0;
 }
@@ -346,7 +346,7 @@ ol.debug-bar-error-notices-list li {
 }
 
 #debug-bar-php .debug-bar-php-notice,
-#debug-bar-deprecated ol.debug-bar-error-notices-list li {
+#debug-bar-deprecated .debug-bar-error-notices-list li {
 	background-color: #ffffe0;
 	border: 1px solid #e6db55;
 }
