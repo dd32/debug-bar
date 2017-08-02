@@ -33,42 +33,23 @@ class Debug_Bar_Deprecated extends Debug_Bar_Panel {
 		echo '<h2><span>', __( 'Total Functions:', 'debug-bar' ), '</span>', number_format_i18n( count( $this->deprecated_functions ) ), "</h2>\n";
 		echo '<h2><span>', __( 'Total Arguments:', 'debug-bar' ), '</span>', number_format_i18n( count( $this->deprecated_arguments ) ), "</h2>\n";
 		echo '<h2><span>', __( 'Total Files:', 'debug-bar' ), '</span>', number_format_i18n( count( $this->deprecated_files ) ), "</h2>\n";
-		if ( count( $this->deprecated_functions ) ) {
-			echo '<ol class="debug-bar-deprecated-list">';
-			foreach ( $this->deprecated_functions as $location => $message_stack ) {
-				list( $message, $stack ) = $message_stack;
-				echo '<li class="debug-bar-deprecated-function">';
-				echo str_replace( ABSPATH, '', $location ) . ' - ' . strip_tags( $message );
-				echo '<br/>';
-				echo $stack;
-				echo '</li>';
-			}
-			echo '</ol>';
-		}
-		if ( count( $this->deprecated_files ) ) {
-			echo '<ol class="debug-bar-deprecated-list">';
-			foreach ( $this->deprecated_files as $location => $message_stack ) {
-				list( $message, $stack ) = $message_stack;
-				echo '<li class="debug-bar-deprecated-file">';
-				echo str_replace( ABSPATH, '', $location ) . ' - ' . strip_tags( $message );
-				echo '<br/>';
-				echo $stack;
-				echo '</li>';
-			}
-			echo '</ol>';
-		}
-		if ( count( $this->deprecated_arguments ) ) {
-			echo '<ol class="debug-bar-deprecated-list">';
-			foreach ( $this->deprecated_arguments as $location => $message_stack ) {
-				list( $message, $stack ) = $message_stack;
-				echo '<li class="debug-bar-deprecated-argument">';
-				echo str_replace( ABSPATH, '', $location ) . ' - ' . strip_tags( $message );
-				echo '<br/>';
-				echo $stack;
-				echo '</li>';
-			}
-			echo '</ol>';
-		}
+
+		$this->render_error_list(
+			$this->deprecated_functions,
+			__( 'DEPRECATED FUNCTION:', 'debug-bar' ),
+			'deprecated-function'
+		);
+		$this->render_error_list(
+			$this->deprecated_arguments,
+			__( 'DEPRECATED ARGUMENT:', 'debug-bar' ),
+			'deprecated-argument'
+		);
+		$this->render_error_list(
+			$this->deprecated_files,
+			__( 'DEPRECATED FILE:', 'debug-bar' ),
+			'deprecated-file'
+		);
+
 		echo '</div>';
 	}
 
@@ -91,7 +72,8 @@ class Debug_Bar_Deprecated extends Debug_Bar_Panel {
 			$message = sprintf( __( '%1$s is <strong>deprecated</strong> since version %2$s with no alternative available.', 'debug-bar' ), $function, $version );
 		}
 
-		$this->deprecated_functions[ $location ] = array( $message, wp_debug_backtrace_summary( null, $bt ) );
+		$key = md5( $location . ':' . $message );
+		$this->deprecated_functions[ $key ] = array( $location, $message, wp_debug_backtrace_summary( null, $bt ) );
 	}
 
 	function deprecated_file_included( $old_file, $replacement, $version, $message ) {
@@ -109,17 +91,12 @@ class Debug_Bar_Deprecated extends Debug_Bar_Panel {
 			$message = sprintf( __( '%1$s is <strong>deprecated</strong> since version %2$s with no alternative available.', 'debug-bar' ), $file_abs, $version ) . $message;
 		}
 
-		$this->deprecated_files[ $location ] = array( $message, wp_debug_backtrace_summary( null, 4 ) );
+		$key = md5( $location . ':' . $message );
+		$this->deprecated_files[ $key ] = array( $location, $message, wp_debug_backtrace_summary( null, 4 ) );
 	}
 
 	function deprecated_argument_run( $function, $message, $version ) {
 		$backtrace = debug_backtrace( false );
-
-		if ( 'define()' === $function ) {
-			$this->deprecated_arguments[] = array( $message, '' );
-
-			return;
-		}
 
 		$bt = 4;
 		if ( ! isset( $backtrace[4]['file'] ) && 'call_user_func_array' === $backtrace[5]['function'] ) {
@@ -127,6 +104,12 @@ class Debug_Bar_Deprecated extends Debug_Bar_Panel {
 		}
 
 		$location = $backtrace[ $bt ]['file'] . ':' . $backtrace[ $bt ]['line'];
+		$key      = md5( $location . ':' . $function . ':' . $message );
+
+		if ( 'define()' === $function ) {
+			$this->deprecated_arguments[ $key ] = array( $location, $message, '' );
+			return;
+		}
 
 		if ( ! is_null( $message ) ) {
 			/* translators: %1$s is a function name, %2$s a version number, %3$s a message regarding the change. */
@@ -136,6 +119,6 @@ class Debug_Bar_Deprecated extends Debug_Bar_Panel {
 			$message = sprintf( __( '%1$s was called with an argument that is <strong>deprecated</strong> since version %2$s with no alternative available.', 'debug-bar' ), $function, $version );
 		}
 
-		$this->deprecated_arguments[ $location ] = array( $message, wp_debug_backtrace_summary( null, $bt ) );
+		$this->deprecated_arguments[ $key ] = array( $location, $message, wp_debug_backtrace_summary( null, $bt ) );
 	}
 }

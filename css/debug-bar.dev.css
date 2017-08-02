@@ -327,14 +327,15 @@ body.debug-bar-maximized.debug-bar-visible {
 	vertical-align: top;
 }
 
-#debug-bar-php ol.debug-bar-php-list {
+/* Error notices lists Used by PHP and Deprecated panels. */
+.debug-bar-error-notices-list {
 	padding: 0 !important;
 	margin: 0 !important;
 	list-style: none;
 	clear: left;
 }
 
-#debug-bar-php ol.debug-bar-php-list li {
+.debug-bar-error-notices-list li {
 	padding: 10px;
 	margin: 0 0 10px 0;
 }
@@ -344,24 +345,13 @@ body.debug-bar-maximized.debug-bar-visible {
 	border: 1px solid #c00;
 }
 
-#debug-bar-php .debug-bar-php-notice {
+#debug-bar-php .debug-bar-php-notice,
+#debug-bar-deprecated .debug-bar-error-notices-list li {
 	background-color: #ffffe0;
 	border: 1px solid #e6db55;
 }
 
-#debug-bar-deprecated ol.debug-bar-deprecated-list {
-	padding: 0 !important;
-	margin: 0 !important;
-	list-style: none;
-	clear: left;
-}
-
-#debug-bar-deprecated ol.debug-bar-deprecated-list li {
-	padding: 10px;
-	margin: 0 0 10px 0;
-	background: #f0f0f0;
-}
-
+/* Specific to WP Query panel. */
 #debug-bar-wp-query table.debug-bar-wp-query-list {
 	width: 100%;
 	border-collapse: collapse;
@@ -397,6 +387,7 @@ body.debug-bar-maximized.debug-bar-visible {
 	margin: 15px 10px 15px 0 !important;
 }
 
+/* Specific to Request panel. */
 #debug-bar-request p {
 	padding: 10px;
 	margin: 0 0 10px 0;
