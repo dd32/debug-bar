@@ -16,7 +16,7 @@ class Debug_Bar_JS extends Debug_Bar_Panel {
 
 	function render() {
 		echo '<div id="debug-bar-js">';
-		echo '<h2><span>' . __( 'Total Errors:', 'debug-bar' ) . "</span><span id='debug-bar-js-error-count'>0</span></h2>\n";
+		$this->render_panel_info_block( __( 'Total Errors:', 'debug-bar' ), '<span id="debug-bar-js-error-count">0</span>' );
 		echo '<ol class="debug-bar-js-list" id="debug-bar-js-errors"></ol>' . "\n";
 		echo '</div>';
 	}

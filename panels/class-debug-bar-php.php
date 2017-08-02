@@ -77,8 +77,9 @@ class Debug_Bar_PHP extends Debug_Bar_Panel {
 
 	function render() {
 		echo '<div id="debug-bar-php">';
-		echo '<h2><span>', __( 'Total Warnings:', 'debug-bar' ), '</span>', number_format_i18n( count( $this->warnings ) ), "</h2>\n";
-		echo '<h2><span>', __( 'Total Notices:', 'debug-bar' ), '</span>', number_format_i18n( count( $this->notices ) ), "</h2>\n";
+
+		$this->render_panel_info_block( __( 'Total Warnings:', 'debug-bar' ), count( $this->warnings ) );
+		$this->render_panel_info_block( __( 'Total Notices:', 'debug-bar' ), count( $this->notices ) );
 
 		$this->render_error_list( $this->warnings, __( 'WARNING:', 'debug-bar' ), 'php-warning' );
 		$this->render_error_list( $this->notices, __( 'NOTICE:', 'debug-bar' ), 'php-notice' );
