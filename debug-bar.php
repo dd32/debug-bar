@@ -48,6 +48,7 @@ class Debug_Bar {
 		$this->early_requirements();
 		Debug_Bar_PHP::start_logging();
 		Debug_Bar_Deprecated::start_logging();
+		Debug_Bar_Doing_It_Wrong::start_logging();
 	}
 
 	public function Debug_Bar() {
@@ -59,8 +60,7 @@ class Debug_Bar {
 
 	public function init() {
 		if ( ! $this->enable_debug_bar() ) {
-			Debug_Bar_PHP::stop_logging();
-			Debug_Bar_Deprecated::stop_logging();
+			$this->stop_logging();
 			return;
 		}
 
@@ -119,8 +119,7 @@ class Debug_Bar {
 
 	public function init_ajax() {
 		if ( ! $this->enable_debug_bar( true ) ) {
-			Debug_Bar_PHP::stop_logging();
-			Debug_Bar_Deprecated::stop_logging();
+			$this->stop_logging();
 			return;
 		}
 
@@ -129,12 +128,23 @@ class Debug_Bar {
 	}
 
 	/**
+	 * Stop logging of notices.
+	 *
+	 * @since 0.10.0
+	 */
+	protected function stop_logging() {
+		Debug_Bar_PHP::stop_logging();
+		Debug_Bar_Deprecated::stop_logging();
+		Debug_Bar_Doing_It_Wrong::stop_logging();
+	}
+
+	/**
 	 * Include a number of files early to allow for error logging to start.
 	 *
 	 * @since 0.10.0
 	 */
 	protected function early_requirements() {
-		$recs = array( 'panel', 'php', 'deprecated' );
+		$recs = array( 'panel', 'php', 'deprecated', 'doing-it-wrong' );
 		$this->include_files( $recs );
 	}
 
@@ -164,7 +174,7 @@ class Debug_Bar {
 	protected function enqueue() {
 		$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '.dev' : '';
 
-		wp_enqueue_style( 'debug-bar', plugins_url( "css/debug-bar$suffix.css", __FILE__ ), array(), '20170802' );
+		wp_enqueue_style( 'debug-bar', plugins_url( "css/debug-bar$suffix.css", __FILE__ ), array(), '20170828' );
 
 		wp_enqueue_script( 'debug-bar', plugins_url( "js/debug-bar$suffix.js", __FILE__ ), array( 'jquery' ), '20170623', true );
 
@@ -177,6 +187,7 @@ class Debug_Bar {
 			'Debug_Bar_Queries',
 			'Debug_Bar_WP_Query',
 			'Debug_Bar_Deprecated',
+			'Debug_Bar_Doing_It_Wrong',
 			'Debug_Bar_Request',
 			'Debug_Bar_Object_Cache',
 			'Debug_Bar_JS',
