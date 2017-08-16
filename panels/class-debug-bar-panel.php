@@ -1,6 +1,6 @@
 <?php
 
-class Debug_Bar_Panel {
+abstract class Debug_Bar_Panel {
 	public $_title = '';
 	public $_visible = true;
 
@@ -26,14 +26,14 @@ class Debug_Bar_Panel {
 	/**
 	 * Initializes the panel.
 	 */
-	protected function init() {}
+	abstract protected function init();
 
 	public function prerender() {}
 
 	/**
 	 * Renders the panel.
 	 */
-	public function render() {}
+	abstract public function render();
 
 	public function is_visible() {
 		return $this->_visible;
