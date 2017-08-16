@@ -1,16 +1,16 @@
 <?php
 
 class Debug_Bar_Object_Cache extends Debug_Bar_Panel {
-	function init() {
+	protected function init() {
 		$this->title( __( 'Object Cache', 'debug-bar' ) );
 	}
 
-	function prerender() {
+	public function prerender() {
 		global $wp_object_cache;
 		$this->set_visible( is_object( $wp_object_cache ) && method_exists( $wp_object_cache, 'stats' ) );
 	}
 
-	function render() {
+	public function render() {
 		global $wp_object_cache;
 
 		$this->render_panel_info_block( __( 'Cache Hits:', 'debug-bar' ), $wp_object_cache->cache_hits );

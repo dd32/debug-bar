@@ -3,7 +3,7 @@
 class Debug_Bar_JS extends Debug_Bar_Panel {
 	public $real_error_handler = array();
 
-	function init() {
+	protected function init() {
 		$this->title( __( 'JavaScript', 'debug-bar' ) );
 
 		/*
@@ -14,7 +14,7 @@ class Debug_Bar_JS extends Debug_Bar_Panel {
 		wp_enqueue_script( 'debug-bar-js', plugins_url( "js/debug-bar-js$suffix.js", dirname( __FILE__ ) ), array( 'jquery' ), '20170623' );
 	}
 
-	function render() {
+	public function render() {
 		echo '<div id="debug-bar-js">';
 		$this->render_panel_info_block( __( 'Total Errors:', 'debug-bar' ), '<span id="debug-bar-js-error-count">0</span>' );
 		echo '<ol class="debug-bar-js-list" id="debug-bar-js-errors"></ol>' . "\n";

@@ -4,7 +4,7 @@ class Debug_Bar_Panel {
 	public $_title = '';
 	public $_visible = true;
 
-	function __construct( $title = '' ) {
+	public function __construct( $title = '' ) {
 		$this->title( $title );
 
 		if ( $this->init() === false ) {
@@ -16,7 +16,7 @@ class Debug_Bar_Panel {
 		add_filter( 'debug_bar_classes', array( $this, 'debug_bar_classes' ) );
 	}
 
-	function Debug_Bar_Panel( $title = '' ) {
+	public function Debug_Bar_Panel( $title = '' ) {
 		if ( function_exists( '_deprecated_constructor' ) ) {
 			_deprecated_constructor( __METHOD__, '0.8.3', __CLASS__ );
 		}
@@ -26,20 +26,20 @@ class Debug_Bar_Panel {
 	/**
 	 * Initializes the panel.
 	 */
-	function init() {}
+	protected function init() {}
 
-	function prerender() {}
+	public function prerender() {}
 
 	/**
 	 * Renders the panel.
 	 */
-	function render() {}
+	public function render() {}
 
-	function is_visible() {
+	public function is_visible() {
 		return $this->_visible;
 	}
 
-	function set_visible( $visible ) {
+	protected function set_visible( $visible ) {
 		$this->_visible = $visible;
 	}
 
@@ -49,7 +49,7 @@ class Debug_Bar_Panel {
 	 * @param null $title
 	 * @return string|void
 	 */
-	function title( $title = null ) {
+	public function title( $title = null ) {
 		if ( ! isset( $title ) ) {
 			return $this->_title;
 		}
@@ -57,7 +57,7 @@ class Debug_Bar_Panel {
 		$this->_title = $title;
 	}
 
-	function debug_bar_classes( $classes ) {
+	public function debug_bar_classes( $classes ) {
 		return $classes;
 	}
 

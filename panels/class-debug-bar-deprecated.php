@@ -66,11 +66,11 @@ class Debug_Bar_Deprecated extends Debug_Bar_Panel {
 		}
 	}
 
-	function init() {
+	protected function init() {
 		$this->title( __( 'Deprecated', 'debug-bar' ) );
 	}
 
-	function prerender() {
+	public function prerender() {
 		$this->set_visible(
 			count( self::$deprecated_functions )
 			|| count( self::$deprecated_files )
@@ -78,7 +78,7 @@ class Debug_Bar_Deprecated extends Debug_Bar_Panel {
 		);
 	}
 
-	function render() {
+	public function render() {
 		echo '<div id="debug-bar-deprecated">';
 
 		$this->render_panel_info_block( __( 'Total Functions:', 'debug-bar' ), count( self::$deprecated_functions ) );

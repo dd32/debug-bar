@@ -2,15 +2,15 @@
 
 class Debug_Bar_Queries extends Debug_Bar_Panel {
 
-	function init() {
+	protected function init() {
 		$this->title( __( 'Queries', 'debug-bar' ) );
 	}
 
-	function prerender() {
+	public function prerender() {
 		$this->set_visible( defined( 'SAVEQUERIES' ) && SAVEQUERIES || ! empty( $GLOBALS['EZSQL_ERROR'] ) );
 	}
 
-	function debug_bar_classes( $classes ) {
+	public function debug_bar_classes( $classes ) {
 		if ( ! empty( $GLOBALS['EZSQL_ERROR'] ) ) {
 			$classes[] = 'debug-bar-php-warning-summary';
 		}
@@ -18,7 +18,7 @@ class Debug_Bar_Queries extends Debug_Bar_Panel {
 		return $classes;
 	}
 
-	function render() {
+	public function render() {
 		global $wpdb, $EZSQL_ERROR;
 
 		$out        = '';
