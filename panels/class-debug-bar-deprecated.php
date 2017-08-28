@@ -3,16 +3,46 @@
 // Alot of this code is massaged from Andrew Nacin's log-deprecated-notices plugin
 
 class Debug_Bar_Deprecated extends Debug_Bar_Panel {
-	private $deprecated_functions = array();
-	private $deprecated_files = array();
-	private $deprecated_arguments = array();
 
-	function init() {
-		$this->title( __( 'Deprecated', 'debug-bar' ) );
+	/**
+	 * Storage to log notices about deprecated WP functions encountered.
+	 *
+	 * @since 0.5
+	 * @since 0.10.0 Changed to public static to allow for logging to start early.
+	 *
+	 * @var array
+	 */
+	public static $deprecated_functions = array();
 
-		add_action( 'deprecated_function_run',  array( $this, 'deprecated_function_run' ),  10, 3 );
-		add_action( 'deprecated_file_included', array( $this, 'deprecated_file_included' ), 10, 4 );
-		add_action( 'deprecated_argument_run',  array( $this, 'deprecated_argument_run' ),  10, 3 );
+	/**
+	 * Storage to log notices about deprecated WP files being included.
+	 *
+	 * @since 0.5
+	 * @since 0.10.0 Changed to public static to allow for logging to start early.
+	 *
+	 * @var array
+	 */
+	public static $deprecated_files = array();
+
+	/**
+	 * Storage to log notices about deprecated WP function arguments being passed.
+	 *
+	 * @since 0.5
+	 * @since 0.10.0 Changed to public static to allow for logging to start early.
+	 *
+	 * @var array
+	 */
+	public static $deprecated_arguments = array();
+
+	/**
+	 * Start logging deprecation notices thrown by WP.
+	 *
+	 * @since 0.10.0
+	 */
+	public static function start_logging() {
+		add_action( 'deprecated_function_run', array( __CLASS__, 'deprecated_function_run' ), 10, 3 );
+		add_action( 'deprecated_file_included', array( __CLASS__, 'deprecated_file_included' ), 10, 4 );
+		add_action( 'deprecated_argument_run',  array( __CLASS__, 'deprecated_argument_run' ),  10, 3 );
 
 		// Silence E_NOTICE for deprecated usage.
 		foreach ( array( 'function', 'file', 'argument' ) as $item ) {
@@ -20,33 +50,53 @@ class Debug_Bar_Deprecated extends Debug_Bar_Panel {
 		}
 	}
 
+	/**
+	 * Stop logging deprecation notices thrown by WP.
+	 *
+	 * @since 0.10.0
+	 */
+	public static function stop_logging() {
+		remove_action( 'deprecated_function_run', array( __CLASS__, 'deprecated_function_run' ), 10 );
+		remove_action( 'deprecated_file_included', array( __CLASS__, 'deprecated_file_included' ), 10 );
+		remove_action( 'deprecated_argument_run',  array( __CLASS__, 'deprecated_argument_run' ),  10 );
+
+		// Don't silence E_NOTICE for deprecated usage.
+		foreach ( array( 'function', 'file', 'argument' ) as $item ) {
+			remove_filter( "deprecated_{$item}_trigger_error", '__return_false' );
+		}
+	}
+
+	function init() {
+		$this->title( __( 'Deprecated', 'debug-bar' ) );
+	}
+
 	function prerender() {
 		$this->set_visible(
-			count( $this->deprecated_functions )
-			|| count( $this->deprecated_files )
-			|| count( $this->deprecated_arguments )
+			count( self::$deprecated_functions )
+			|| count( self::$deprecated_files )
+			|| count( self::$deprecated_arguments )
 		);
 	}
 
 	function render() {
 		echo '<div id="debug-bar-deprecated">';
 
-		$this->render_panel_info_block( __( 'Total Functions:', 'debug-bar' ), count( $this->deprecated_functions ) );
-		$this->render_panel_info_block( __( 'Total Arguments:', 'debug-bar' ), count( $this->deprecated_arguments ) );
-		$this->render_panel_info_block( __( 'Total Files:', 'debug-bar' ), count( $this->deprecated_files ) );
+		$this->render_panel_info_block( __( 'Total Functions:', 'debug-bar' ), count( self::$deprecated_functions ) );
+		$this->render_panel_info_block( __( 'Total Arguments:', 'debug-bar' ), count( self::$deprecated_arguments ) );
+		$this->render_panel_info_block( __( 'Total Files:', 'debug-bar' ), count( self::$deprecated_files ) );
 
 		$this->render_error_list(
-			$this->deprecated_functions,
+			self::$deprecated_functions,
 			__( 'DEPRECATED FUNCTION:', 'debug-bar' ),
 			'deprecated-function'
 		);
 		$this->render_error_list(
-			$this->deprecated_arguments,
+			self::$deprecated_arguments,
 			__( 'DEPRECATED ARGUMENT:', 'debug-bar' ),
 			'deprecated-argument'
 		);
 		$this->render_error_list(
-			$this->deprecated_files,
+			self::$deprecated_files,
 			__( 'DEPRECATED FILE:', 'debug-bar' ),
 			'deprecated-file'
 		);
@@ -54,7 +104,17 @@ class Debug_Bar_Deprecated extends Debug_Bar_Panel {
 		echo '</div>';
 	}
 
-	function deprecated_function_run( $function, $replacement, $version ) {
+	/**
+	 * Log notices about deprecated functions being called.
+	 *
+	 * @since 0.5
+	 * @since 0.10.0 Changed to static to allow for deprecation logging to start early.
+	 *
+	 * @param string $function    The function that was called.
+	 * @param string $replacement The function that should have been called.
+	 * @param string $version     The version of WordPress that deprecated the function.
+	 */
+	public static function deprecated_function_run( $function, $replacement, $version ) {
 		$backtrace = debug_backtrace( false );
 		$bt        = 4;
 
@@ -74,12 +134,23 @@ class Debug_Bar_Deprecated extends Debug_Bar_Panel {
 		}
 
 		$key = md5( $location . ':' . $message );
-		$this->deprecated_functions[ $key ] = array( $location, $message, wp_debug_backtrace_summary( null, $bt ) );
+		self::$deprecated_functions[ $key ] = array( $location, $message, wp_debug_backtrace_summary( null, $bt ) );
 
 		error_log( 'Deprecation Notice: ' . strip_tags( $message ) . '  in ' . $location );
 	}
 
-	function deprecated_file_included( $old_file, $replacement, $version, $message ) {
+	/**
+	 * Log notices about deprecated files being included.
+	 *
+	 * @since 0.5
+	 * @since 0.10.0 Changed to static to allow for deprecation logging to start early.
+	 *
+	 * @param string $old_file    The file that was called.
+	 * @param string $replacement The file that should have been included based on ABSPATH.
+	 * @param string $version     The version of WordPress that deprecated the file.
+	 * @param string $message     A message regarding the change.
+	 */
+	public static function deprecated_file_included( $old_file, $replacement, $version, $message ) {
 		$backtrace = debug_backtrace( false );
 		$file      = $backtrace[4]['file'];
 		$file_abs  = str_replace( ABSPATH, '', $file );
@@ -95,12 +166,22 @@ class Debug_Bar_Deprecated extends Debug_Bar_Panel {
 		}
 
 		$key = md5( $location . ':' . $message );
-		$this->deprecated_files[ $key ] = array( $location, $message, wp_debug_backtrace_summary( null, 4 ) );
+		self::$deprecated_files[ $key ] = array( $location, $message, wp_debug_backtrace_summary( null, 4 ) );
 
 		error_log( 'Deprecation Notice: ' . strip_tags( $message ) . '  in ' . $location );
 	}
 
-	function deprecated_argument_run( $function, $message, $version ) {
+	/**
+	 * Log notices about deprecated function parameters being passed.
+	 *
+	 * @since 0.5
+	 * @since 0.10.0 Changed to static to allow for deprecation logging to start early.
+	 *
+	 * @param string $function    The function that was called.
+	 * @param string $message     A message regarding the change.
+	 * @param string $version     The version of WordPress that deprecated the argument used.
+	 */
+	public static function deprecated_argument_run( $function, $message, $version ) {
 		$backtrace = debug_backtrace( false );
 
 		$bt = 4;
@@ -112,7 +193,7 @@ class Debug_Bar_Deprecated extends Debug_Bar_Panel {
 		$key      = md5( $location . ':' . $function . ':' . $message );
 
 		if ( 'define()' === $function ) {
-			$this->deprecated_arguments[ $key ] = array( $location, $message, '' );
+			self::$deprecated_arguments[ $key ] = array( $location, $message, '' );
 			return;
 		}
 
@@ -124,7 +205,7 @@ class Debug_Bar_Deprecated extends Debug_Bar_Panel {
 			$message = sprintf( __( '%1$s was called with an argument that is <strong>deprecated</strong> since version %2$s with no alternative available.', 'debug-bar' ), $function, $version );
 		}
 
-		$this->deprecated_arguments[ $key ] = array( $location, $message, wp_debug_backtrace_summary( null, $bt ) );
+		self::$deprecated_arguments[ $key ] = array( $location, $message, wp_debug_backtrace_summary( null, $bt ) );
 
 		error_log( 'Deprecation Notice: ' . strip_tags( $message ) . '  in ' . $location );
 	}

@@ -1,9 +1,58 @@
 <?php
 
 class Debug_Bar_PHP extends Debug_Bar_Panel {
-	public $warnings = array();
-	public $notices = array();
-	public $real_error_handler = array();
+
+	/**
+	 * Storage to log PHP warnings encountered.
+	 *
+	 * @since 0.5
+	 * @since 0.10.0 Changed to static to allow for error logging to start early.
+	 *
+	 * @var array
+	 */
+	public static $warnings = array();
+
+	/**
+	 * Storage to log PHP errors encountered.
+	 *
+	 * @since 0.5
+	 * @since 0.10.0 Changed to static to allow for error logging to start early.
+	 *
+	 * @var array
+	 */
+	public static $notices = array();
+
+	/**
+	 * Store the callback for the previous error handler.
+	 *
+	 * @since 0.5
+	 * @since 0.10.0 Changed to static to allow for error logging to start early.
+	 *
+	 * @var array
+	 */
+	public static $real_error_handler;
+
+	/**
+	 * Start logging PHP errors.
+	 *
+	 * @since 0.10.0
+	 */
+	public static function start_logging() {
+		if ( ! WP_DEBUG ) {
+			return false;
+		}
+
+		self::$real_error_handler = set_error_handler( array( __CLASS__, 'error_handler' ) );
+	}
+
+	/**
+	 * Stop logging PHP errors.
+	 *
+	 * @since 0.10.0
+	 */
+	public static function stop_logging() {
+		restore_error_handler();
+	}
 
 	function init() {
 		if ( ! WP_DEBUG ) {
@@ -11,25 +60,40 @@ class Debug_Bar_PHP extends Debug_Bar_Panel {
 		}
 
 		$this->title( __( 'Notices / Warnings', 'debug-bar' ) );
-
-		$this->real_error_handler = set_error_handler( array( &$this, 'error_handler' ) );
 	}
 
 	function is_visible() {
-		return count( $this->notices ) || count( $this->warnings );
+		return count( self::$notices ) || count( self::$warnings );
 	}
 
 	function debug_bar_classes( $classes ) {
-		if ( count( $this->warnings ) ) {
+		if ( count( self::$warnings ) ) {
 			$classes[] = 'debug-bar-php-warning-summary';
-		} elseif ( count( $this->notices ) ) {
+		} elseif ( count( self::$notices ) ) {
 			$classes[] = 'debug-bar-php-notice-summary';
 		}
 
 		return $classes;
 	}
 
-	function error_handler( $type, $message, $file, $line ) {
+	/**
+	 * Log PHP errors when they are encountered.
+	 *
+	 * @since 0.5
+	 * @since 0.10.0 Changed to static to allow for error logging to start early.
+	 *
+	 * @param int    $type    The level of the error raised.
+	 * @param string $message The error message.
+	 * @param string $file    The filename that the error was raised in.
+	 * @param int    $line    The line number the error was raised at.
+	 *
+	 * @return false To allow for the normal error handler to continue.
+	 */
+	public static function error_handler( $type, $message, $file, $line ) {
+		if ( ! ( error_reporting() & $type ) ) {
+			return false;
+		}
+
 		$_key = md5( $file . ':' . $line . ':' . $message );
 
 		if ( ! defined( 'E_DEPRECATED' ) ) {
@@ -42,7 +106,7 @@ class Debug_Bar_PHP extends Debug_Bar_Panel {
 		switch ( $type ) {
 			case E_WARNING:
 			case E_USER_WARNING:
-				$this->warnings[ $_key ] = array(
+				self::$warnings[ $_key ] = array(
 					$file . ':' . $line,
 					$message,
 					wp_debug_backtrace_summary( __CLASS__ ),
@@ -50,7 +114,7 @@ class Debug_Bar_PHP extends Debug_Bar_Panel {
 				break;
 			case E_NOTICE:
 			case E_USER_NOTICE:
-				$this->notices[ $_key ] = array(
+				self::$notices[ $_key ] = array(
 					$file . ':' . $line,
 					$message,
 					wp_debug_backtrace_summary( __CLASS__ ),
@@ -68,8 +132,8 @@ class Debug_Bar_PHP extends Debug_Bar_Panel {
 				break;
 		}
 
-		if ( null !== $this->real_error_handler ) {
-			return call_user_func( $this->real_error_handler, $type, $message, $file, $line );
+		if ( isset( self::$real_error_handler ) ) {
+			return call_user_func( self::$real_error_handler, $type, $message, $file, $line );
 		} else {
 			return false;
 		}
@@ -78,11 +142,11 @@ class Debug_Bar_PHP extends Debug_Bar_Panel {
 	function render() {
 		echo '<div id="debug-bar-php">';
 
-		$this->render_panel_info_block( __( 'Total Warnings:', 'debug-bar' ), count( $this->warnings ) );
-		$this->render_panel_info_block( __( 'Total Notices:', 'debug-bar' ), count( $this->notices ) );
+		$this->render_panel_info_block( __( 'Total Warnings:', 'debug-bar' ), count( self::$warnings ) );
+		$this->render_panel_info_block( __( 'Total Notices:', 'debug-bar' ), count( self::$notices ) );
 
-		$this->render_error_list( $this->warnings, __( 'WARNING:', 'debug-bar' ), 'php-warning' );
-		$this->render_error_list( $this->notices, __( 'NOTICE:', 'debug-bar' ), 'php-notice' );
+		$this->render_error_list( self::$warnings, __( 'WARNING:', 'debug-bar' ), 'php-warning' );
+		$this->render_error_list( self::$notices, __( 'NOTICE:', 'debug-bar' ), 'php-notice' );
 
 		echo '</div>';
 	}
