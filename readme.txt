@@ -4,6 +4,7 @@ Tags: debug
 Tested up to: 4.8
 Stable tag: 0.9
 Requires at least: 3.4
+Requires PHP: 5.2.4
 
 Adds a debug menu to the admin bar that shows query, cache, and other helpful debugging information.
 
