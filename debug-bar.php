@@ -37,7 +37,7 @@ class Debug_Bar {
 
 	public $panels = array();
 
-	function __construct() {
+	public function __construct() {
 		if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
 			add_action( 'admin_init', array( $this, 'init_ajax' ) );
 		}
@@ -50,14 +50,14 @@ class Debug_Bar {
 		Debug_Bar_Deprecated::start_logging();
 	}
 
-	function Debug_Bar() {
+	public function Debug_Bar() {
 		if ( function_exists( '_deprecated_constructor' ) ) {
 			_deprecated_constructor( __METHOD__, '0.8.3', __CLASS__ );
 		}
 		self::__construct();
 	}
 
-	function init() {
+	public function init() {
 		if ( ! $this->enable_debug_bar() ) {
 			Debug_Bar_PHP::stop_logging();
 			Debug_Bar_Deprecated::stop_logging();
@@ -86,7 +86,7 @@ class Debug_Bar {
 	 *
 	 * @return bool
 	 */
-	function is_wp_login() {
+	public function is_wp_login() {
 		return 'wp-login.php' === basename( $_SERVER['SCRIPT_NAME'] );
 	}
 
@@ -98,7 +98,7 @@ class Debug_Bar {
 	 * @param bool $ajax Whether this is an ajax call or not. Defaults to false.
 	 * @return bool
 	 */
-	function enable_debug_bar( $ajax = false ) {
+	protected function enable_debug_bar( $ajax = false ) {
 		$enable = false;
 
 		if ( $ajax && is_super_admin() ) {
@@ -117,7 +117,7 @@ class Debug_Bar {
 		return apply_filters( 'debug_bar_enable', $enable );
 	}
 
-	function init_ajax() {
+	public function init_ajax() {
 		if ( ! $this->enable_debug_bar( true ) ) {
 			Debug_Bar_PHP::stop_logging();
 			Debug_Bar_Deprecated::stop_logging();
@@ -161,7 +161,7 @@ class Debug_Bar {
 		}
 	}
 
-	function enqueue() {
+	protected function enqueue() {
 		$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '.dev' : '';
 
 		wp_enqueue_style( 'debug-bar', plugins_url( "css/debug-bar$suffix.css", __FILE__ ), array(), '20170802' );
@@ -171,7 +171,7 @@ class Debug_Bar {
 		do_action( 'debug_bar_enqueue_scripts' );
 	}
 
-	function init_panels() {
+	protected function init_panels() {
 		$classes = array(
 			'Debug_Bar_PHP',
 			'Debug_Bar_Queries',
@@ -189,7 +189,7 @@ class Debug_Bar {
 		$this->panels = apply_filters( 'debug_bar_panels', $this->panels );
 	}
 
-	function ensure_ajaxurl() {
+	public function ensure_ajaxurl() {
 		?>
 		<script type="text/javascript">
 			//<![CDATA[
@@ -199,7 +199,7 @@ class Debug_Bar {
 		<?php
 	}
 
-	function admin_bar_menu() {
+	public function admin_bar_menu() {
 		global $wp_admin_bar;
 
 		$classes = apply_filters( 'debug_bar_classes', array() );
@@ -235,7 +235,7 @@ class Debug_Bar {
 		}
 	}
 
-	function body_class( $classes ) {
+	public function body_class( $classes ) {
 		if ( is_array( $classes ) ) {
 			$classes[] = 'debug-bar-maximized';
 		} else {
@@ -253,7 +253,7 @@ class Debug_Bar {
 		return $classes;
 	}
 
-	function render() {
+	public function render() {
 		global $wpdb;
 
 		if ( empty( $this->panels ) ) {

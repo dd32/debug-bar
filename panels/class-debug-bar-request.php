@@ -1,15 +1,15 @@
 <?php
 
 class Debug_Bar_Request extends Debug_Bar_Panel {
-	function init() {
+	protected function init() {
 		$this->title( __( 'Request', 'debug-bar' ) );
 	}
 
-	function prerender() {
+	public function prerender() {
 		$this->set_visible( ! is_admin() );
 	}
 
-	function render() {
+	public function render() {
 		global $wp;
 
 		echo '<div id="debug-bar-request">';

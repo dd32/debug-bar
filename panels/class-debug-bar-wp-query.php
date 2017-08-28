@@ -1,15 +1,15 @@
 <?php
 
 class Debug_Bar_WP_Query extends Debug_Bar_Panel {
-	function init() {
+	protected function init() {
 		$this->title( __( 'WP Query', 'debug-bar' ) );
 	}
 
-	function prerender() {
+	public function prerender() {
 		$this->set_visible( defined( 'SAVEQUERIES' ) && SAVEQUERIES );
 	}
 
-	function render() {
+	public function render() {
 		global $template, $wp_query;
 
 		$queried_object = get_queried_object();
@@ -94,17 +94,17 @@ class Debug_Bar_WP_Query extends Debug_Bar_Panel {
 		if ( ! is_null( $queried_object ) ) {
 			echo '<h3>', __( 'Queried Object:', 'debug-bar' ), '</h3>';
 			echo '<table class="debug-bar-wp-query-list"><tbody>';
-			$this->_recursive_print_kv( $queried_object );
+			$this->recursive_print_kv( $queried_object );
 			echo '</tbody></table>';
 		}
 		echo '</div>';
 	}
 
-	protected function _recursive_print_kv( $kv_array ) {
+	protected function recursive_print_kv( $kv_array ) {
 		foreach ( $kv_array as $key => $value ) {
 			if ( is_object( $value ) || is_array( $value ) ) {
 				echo '<tr><th>', esc_html( $key ), '</th> <td>&rArr;</td> <td>';
-				$this->_recursive_print_kv( $value );
+				$this->recursive_print_kv( $value );
 				echo '</td></tr>';
 			} else {
 				echo '<tr><th>', esc_html( $key ), '</th> <td>&rArr;</td> <td>', esc_html( $value ), '</td></tr>';

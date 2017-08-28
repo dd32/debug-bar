@@ -54,7 +54,7 @@ class Debug_Bar_PHP extends Debug_Bar_Panel {
 		restore_error_handler();
 	}
 
-	function init() {
+	protected function init() {
 		if ( ! WP_DEBUG ) {
 			return false;
 		}
@@ -62,11 +62,11 @@ class Debug_Bar_PHP extends Debug_Bar_Panel {
 		$this->title( __( 'Notices / Warnings', 'debug-bar' ) );
 	}
 
-	function is_visible() {
+	public function is_visible() {
 		return count( self::$notices ) || count( self::$warnings );
 	}
 
-	function debug_bar_classes( $classes ) {
+	public function debug_bar_classes( $classes ) {
 		if ( count( self::$warnings ) ) {
 			$classes[] = 'debug-bar-php-warning-summary';
 		} elseif ( count( self::$notices ) ) {
@@ -139,7 +139,7 @@ class Debug_Bar_PHP extends Debug_Bar_Panel {
 		}
 	}
 
-	function render() {
+	public function render() {
 		echo '<div id="debug-bar-php">';
 
 		$this->render_panel_info_block( __( 'Total Warnings:', 'debug-bar' ), count( self::$warnings ) );
