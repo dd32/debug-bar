@@ -1,7 +1,6 @@
 <?php
 
 class Debug_Bar_JS extends Debug_Bar_Panel {
-	public $real_error_handler = array();
 
 	function init() {
 		$this->title( __( 'JavaScript', 'debug-bar' ) );
