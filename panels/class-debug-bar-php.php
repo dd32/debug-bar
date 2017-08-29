@@ -125,7 +125,6 @@ class Debug_Bar_PHP extends Debug_Bar_Panel {
 				// TODO
 				break;
 			case E_DEPRECATED:
-			case E_USER_DEPRECATED:
 				// TODO
 				break;
 			case 0:
