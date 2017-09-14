@@ -319,7 +319,7 @@ body.debug-bar-maximized.debug-bar-visible {
 	vertical-align: top;
 }
 
-/* Error notices lists Used by PHP and Deprecated panels. */
+/* Error notices lists. Used by PHP, Deprecated and DoingItWrong panels. */
 .debug-bar-error-notices-list {
 	padding: 0 !important;
 	margin: 0 !important;
@@ -338,7 +338,8 @@ body.debug-bar-maximized.debug-bar-visible {
 }
 
 #debug-bar-php .debug-bar-php-notice,
-#debug-bar-deprecated .debug-bar-error-notices-list li {
+#debug-bar-deprecated .debug-bar-error-notices-list li,
+#debug-bar-doingitwrong .debug-bar-error-notices-list li {
 	background-color: #ffffe0;
 	border: 1px solid #e6db55;
 }
