@@ -252,11 +252,11 @@ class Debug_Bar_Deprecated extends Debug_Bar_Panel {
 	 * @since 0.10.0
 	 *
 	 * @param string $hook         The hook that was used.
-	 * @param string $version      The version of WordPress that deprecated the hook.
 	 * @param string $replacement  The hook that should have been used.
+	 * @param string $version      The version of WordPress that deprecated the hook.
 	 * @param string $hook_message A message regarding the change.
 	 */
-	public static function deprecated_hook_run( $hook, $version, $replacement, $hook_message ) {
+	public static function deprecated_hook_run( $hook, $replacement, $version, $hook_message ) {
 		$backtrace = debug_backtrace( false );
 		$bt        = 4;
 		// Check if we're a hook callback.
