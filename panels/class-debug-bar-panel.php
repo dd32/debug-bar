@@ -1,7 +1,7 @@
 <?php
 
 abstract class Debug_Bar_Panel {
-	public $_title = '';
+	public $_title   = '';
 	public $_visible = true;
 
 	public function __construct( $title = '' ) {

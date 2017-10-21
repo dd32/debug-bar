@@ -1,12 +1,19 @@
 <?php
-/*
- Plugin Name: Debug Bar
- Plugin URI: https://wordpress.org/plugins/debug-bar/
- Description: Adds a debug menu to the admin bar that shows query, cache, and other helpful debugging information.
- Author: wordpressdotorg
- Version: 0.9.1-alpha
- Author URI: https://wordpress.org/
- Text Domain: debug-bar
+/**
+ * Debug Bar, a WordPress plugin.
+ *
+ * @package     WordPress\Plugins\Debug Bar
+ * @link        https://wordpress.org/plugins/debug-bar/
+ * @license     http://creativecommons.org/licenses/GPL/2.0/ GNU General Public License, version 2 or higher
+ *
+ * @wordpress-plugin
+ * Plugin Name: Debug Bar
+ * Plugin URI:  https://wordpress.org/plugins/debug-bar/
+ * Description: Adds a debug menu to the admin bar that shows query, cache, and other helpful debugging information.
+ * Author: wordpressdotorg
+ * Version:     0.10.0-alpha
+ * Author URI:  https://wordpress.org/
+ * Text Domain: debug-bar
  */
 
 /***
@@ -66,11 +73,11 @@ class Debug_Bar {
 
 		load_plugin_textdomain( 'debug-bar' );
 
-		add_action( 'admin_bar_menu',   array( $this, 'admin_bar_menu' ), 1000 );
-		add_action( 'admin_footer',     array( $this, 'render' ), 1000 );
-		add_action( 'wp_footer',        array( $this, 'render' ), 1000 );
-		add_action( 'wp_head',          array( $this, 'ensure_ajaxurl' ), 1 );
-		add_filter( 'body_class',       array( $this, 'body_class' ) );
+		add_action( 'admin_bar_menu', array( $this, 'admin_bar_menu' ), 1000 );
+		add_action( 'admin_footer', array( $this, 'render' ), 1000 );
+		add_action( 'wp_footer', array( $this, 'render' ), 1000 );
+		add_action( 'wp_head', array( $this, 'ensure_ajaxurl' ), 1 );
+		add_filter( 'body_class', array( $this, 'body_class' ) );
 		add_filter( 'admin_body_class', array( $this, 'body_class' ) );
 
 		$this->requirements();
@@ -291,7 +298,7 @@ class Debug_Bar {
 				<div id="debug-status">
 					<?php
 					//@todo: Add a links to information about WP_DEBUG, PHP version, MySQL version, and Peak Memory.
-					$statuses   = array();
+					$statuses = array();
 
 					$host_name = __( 'Site', 'debug-bar' );
 					if ( function_exists( 'php_uname' ) ) {

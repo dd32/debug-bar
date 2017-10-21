@@ -118,7 +118,7 @@ class Debug_Bar_Doing_It_Wrong extends Debug_Bar_Panel {
 			$version
 		);
 
-		$key = md5( $location . ':' . $message );
+		$key                          = md5( $location . ':' . $message );
 		self::$doing_it_wrong[ $key ] = array( $location, $notice, wp_debug_backtrace_summary( null, $bt ) );
 
 		error_log( 'Doing it wrong Notice: ' . strip_tags( $notice ) . '  in ' . $location );

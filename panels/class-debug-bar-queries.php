@@ -32,7 +32,7 @@ class Debug_Bar_Queries extends Debug_Bar_Panel {
 				$out .= '<p>' . sprintf( __( 'There are too many queries to show easily! <a href="%s">Show them anyway</a>', 'debug-bar' ), esc_url( add_query_arg( 'debug_queries', 'true' ) ) ) . '</p>';
 			}
 
-			$out .= '<ol class="wpd-queries">';
+			$out    .= '<ol class="wpd-queries">';
 			$counter = 0;
 
 			foreach ( $wpdb->queries as $q ) {
@@ -50,8 +50,9 @@ class Debug_Bar_Queries extends Debug_Bar_Panel {
 				$debug = str_replace( array( 'do_action, call_user_func_array' ), array( 'do_action' ), $debug );
 				$debug = esc_html( $debug );
 				$query = nl2br( esc_html( $query ) );
+
 				/* translators: %s = duration in milliseconds. */
-				$time  = esc_html( sprintf( __( '%s ms', 'debug-bar' ), number_format_i18n( ( $elapsed * 1000 ), 1 ) ) );
+				$time = esc_html( sprintf( __( '%s ms', 'debug-bar' ), number_format_i18n( ( $elapsed * 1000 ), 1 ) ) );
 
 				$out .= "<li>$query<br/><div class='qdebug'>$debug <span>#$counter ($time)</span></div></li>\n";
 			}
@@ -69,7 +70,7 @@ class Debug_Bar_Queries extends Debug_Bar_Panel {
 			foreach ( $EZSQL_ERROR as $error ) {
 				$query   = nl2br( esc_html( $error['query'] ) );
 				$message = esc_html( $error['error_str'] );
-				$out .= "<li>$query<br/><div class='qdebug'>$message</div></li>\n";
+				$out    .= "<li>$query<br/><div class='qdebug'>$message</div></li>\n";
 			}
 			$out .= '</ol>';
 		}
