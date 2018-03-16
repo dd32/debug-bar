@@ -50,10 +50,9 @@ class Debug_Bar_Queries extends Debug_Bar_Panel {
 				$debug = str_replace( array( 'do_action, call_user_func_array' ), array( 'do_action' ), $debug );
 				$debug = esc_html( $debug );
 				$query = nl2br( esc_html( $query ) );
-				/* translators: %0.1f = duration in microseconds. */
-				$time  = esc_html( sprintf( __( '%0.1f ms', 'debug-bar' ), number_format_i18n( ( $elapsed * 1000 ), 1 ) ) );
+				/* translators: %s = duration in milliseconds. */
+				$time  = esc_html( sprintf( __( '%s ms', 'debug-bar' ), number_format_i18n( ( $elapsed * 1000 ), 1 ) ) );
 
-				/* translators: %d = duration time in microseconds. */
 				$out .= "<li>$query<br/><div class='qdebug'>$debug <span>#$counter ($time)</span></div></li>\n";
 			}
 			$out .= '</ol>';
@@ -79,8 +78,8 @@ class Debug_Bar_Queries extends Debug_Bar_Panel {
 			$this->render_panel_info_block( __( 'Total Queries:', 'debug-bar' ), number_format_i18n( $wpdb->num_queries ) );
 		}
 		if ( $total_time ) {
-			/* translators: %0.1f = duration in microseconds. */
-			$duration = sprintf( __( '%0.1f ms', 'debug-bar' ), number_format_i18n( ( $total_time * 1000 ), 1 ) );
+			/* translators: %s = duration in milliseconds. */
+			$duration = sprintf( __( '%s ms', 'debug-bar' ), number_format_i18n( ( $total_time * 1000 ), 1 ) );
 			$this->render_panel_info_block( __( 'Total query time:', 'debug-bar' ), $duration );
 		}
 		if ( ! empty( $EZSQL_ERROR ) ) {
