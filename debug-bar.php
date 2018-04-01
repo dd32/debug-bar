@@ -239,9 +239,6 @@ class Debug_Bar {
 				'id'     => "debug-bar-$panel_class",
 				'title'  => $panel->title(),
 				'href'   => '#debug-menu-target-' . esc_attr( $panel_class ),
-				'meta'   => array(
-					'rel' => '#debug-menu-link-' . esc_attr( $panel_class ),
-				),
 			) );
 		}
 	}
