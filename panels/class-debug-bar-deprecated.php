@@ -60,9 +60,9 @@ class Debug_Bar_Deprecated extends Debug_Bar_Panel {
 	public static function start_logging() {
 		add_action( 'deprecated_function_run', array( __CLASS__, 'deprecated_function_run' ), 10, 3 );
 		add_action( 'deprecated_file_included', array( __CLASS__, 'deprecated_file_included' ), 10, 4 );
-		add_action( 'deprecated_argument_run',  array( __CLASS__, 'deprecated_argument_run' ),  10, 3 );
-		add_action( 'deprecated_hook_run',  array( __CLASS__, 'deprecated_hook_run' ),  10, 4 );
-		add_action( 'deprecated_constructor_run',  array( __CLASS__, 'deprecated_constructor_run' ),  10, 3 );
+		add_action( 'deprecated_argument_run', array( __CLASS__, 'deprecated_argument_run' ), 10, 3 );
+		add_action( 'deprecated_hook_run', array( __CLASS__, 'deprecated_hook_run' ), 10, 4 );
+		add_action( 'deprecated_constructor_run', array( __CLASS__, 'deprecated_constructor_run' ), 10, 3 );
 
 		// Silence E_NOTICE for deprecated usage.
 		foreach ( array( 'function', 'file', 'argument', 'constructor' ) as $item ) {
@@ -78,9 +78,9 @@ class Debug_Bar_Deprecated extends Debug_Bar_Panel {
 	public static function stop_logging() {
 		remove_action( 'deprecated_function_run', array( __CLASS__, 'deprecated_function_run' ), 10 );
 		remove_action( 'deprecated_file_included', array( __CLASS__, 'deprecated_file_included' ), 10 );
-		remove_action( 'deprecated_argument_run',  array( __CLASS__, 'deprecated_argument_run' ),  10 );
-		remove_action( 'deprecated_hook_run',  array( __CLASS__, 'deprecated_hook_run' ),  10 );
-		remove_action( 'deprecated_constructor_run',  array( __CLASS__, 'deprecated_constructor_run' ),  10 );
+		remove_action( 'deprecated_argument_run', array( __CLASS__, 'deprecated_argument_run' ), 10 );
+		remove_action( 'deprecated_hook_run', array( __CLASS__, 'deprecated_hook_run' ), 10 );
+		remove_action( 'deprecated_constructor_run', array( __CLASS__, 'deprecated_constructor_run' ), 10 );
 
 		// Don't silence E_NOTICE for deprecated usage.
 		foreach ( array( 'function', 'file', 'argument', 'constructor' ) as $item ) {
@@ -169,7 +169,7 @@ class Debug_Bar_Deprecated extends Debug_Bar_Panel {
 			$message = sprintf( __( '%1$s is <strong>deprecated</strong> since version %2$s with no alternative available.', 'debug-bar' ), $function, $version );
 		}
 
-		$key = md5( $location . ':' . $message );
+		$key                                = md5( $location . ':' . $message );
 		self::$deprecated_functions[ $key ] = array( $location, $message, wp_debug_backtrace_summary( null, $bt ) );
 
 		error_log( 'Deprecation Notice: ' . strip_tags( $message ) . '  in ' . $location );
@@ -201,7 +201,7 @@ class Debug_Bar_Deprecated extends Debug_Bar_Panel {
 			$message = sprintf( __( '%1$s is <strong>deprecated</strong> since version %2$s with no alternative available.', 'debug-bar' ), $file_abs, $version ) . $message;
 		}
 
-		$key = md5( $location . ':' . $message );
+		$key                            = md5( $location . ':' . $message );
 		self::$deprecated_files[ $key ] = array( $location, $message, wp_debug_backtrace_summary( null, 4 ) );
 
 		error_log( 'Deprecation Notice: ' . strip_tags( $message ) . '  in ' . $location );
@@ -270,7 +270,7 @@ class Debug_Bar_Deprecated extends Debug_Bar_Panel {
 		if ( ! is_null( $replacement ) ) {
 			$message = sprintf(
 				/* translators: %1$s is a hook name, %2$s a version number, %3$s an alternative hook to use. */
-				__( '%1$s is <strong>deprecated</strong> since version %2$s! Use %3$s instead.' , 'debug-bar' ),
+				__( '%1$s is <strong>deprecated</strong> since version %2$s! Use %3$s instead.', 'debug-bar' ),
 				$hook,
 				$version,
 				$replacement
@@ -286,7 +286,7 @@ class Debug_Bar_Deprecated extends Debug_Bar_Panel {
 			$message .= ' ' . $hook_message;
 		}
 
-		$key = md5( $location . ':' . $message );
+		$key                            = md5( $location . ':' . $message );
 		self::$deprecated_hooks[ $key ] = array( $location, $message, wp_debug_backtrace_summary( null, $bt ) );
 
 		error_log( 'Deprecation Notice: ' . strip_tags( $message ) . '  in ' . $location );
@@ -331,7 +331,7 @@ class Debug_Bar_Deprecated extends Debug_Bar_Panel {
 			);
 		}
 
-		$key = md5( $location . ':' . $message );
+		$key                                   = md5( $location . ':' . $message );
 		self::$deprecated_constructors[ $key ] = array( $location, $message, wp_debug_backtrace_summary( null, $bt ) );
 
 		error_log( 'Deprecation Notice: ' . strip_tags( $message ) . ' in ' . $location );
