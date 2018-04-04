@@ -301,7 +301,8 @@ class Debug_Bar {
 					$statuses = array();
 
 					$host_name = __( 'Site', 'debug-bar' );
-					if ( function_exists( 'php_uname' ) ) {
+					if ( function_exists( 'php_uname' ) && version_compare( php_version(), '7.0.0', '>' ) === true ) {
+						// phpcs:ignore PHPCompatibility.PHP.NewFunctionParameters.php_uname_modeFound
 						$host_name = php_uname( 'n' );
 					} elseif ( ! empty( $_SERVER['SERVER_NAME'] ) ) {
 						$host_name = $_SERVER['SERVER_NAME'];
