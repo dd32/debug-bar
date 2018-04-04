@@ -24,6 +24,14 @@
 		<exclude name="PHPCompatibility.PHP.NewFunctionParameters.debug_backtrace_optionsFound"/>
 	</rule>
 
+	<!-- We can ignore these two errors as the referenced file back-fills them if needed. -->
+	<rule ref="PHPCompatibility.PHP.NewConstants.e_deprecatedFound">
+		<exclude-pattern>*/class-debug-bar-php\.php</exclude-pattern>
+	</rule>
+	<rule ref="PHPCompatibility.PHP.NewConstants.e_user_deprecatedFound">
+		<exclude-pattern>*/class-debug-bar-php\.php</exclude-pattern>
+	</rule>
+
 	<!--
 		##### WordPress sniffs #####
 		The `WordPress-Extra` ruleset contains the WP Core rules + best practices.
